@@ -1,0 +1,15 @@
+{
+  "name": "bloom-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bloom employee dashboard — a static site built from the Figma design, with micro-interactions.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
