@@ -25,9 +25,10 @@ Or deploy from the command line with the Vercel CLI: `vercel --prod`.
 ```
 public/            the website (served as-is)
   index.html
-  styles/          app.css (interactions, dark theme), tailwind.css (generated from the design)
-  js/              app.js (all interactions), mesh.js (WebGL gradient renderer)
-  assets/          images and icons exported from Figma
+  books.html       Penguin Random House India landing page (served at /books)
+  styles/          app.css (interactions, dark theme), tailwind.css (generated from the design), books.css
+  js/              app.js (all interactions), mesh.js (WebGL gradient renderer), books.js
+  assets/          images and icons exported from Figma (assets/books/ for books.html)
   assets-masks/    shape-only copies of Figma mask SVGs
   fonts/           Makira font files
 server.js          small static server for local use

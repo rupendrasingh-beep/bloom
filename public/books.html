@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penguin Random House India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/books.css?v=1">
+<script>
+  // Apply the saved theme before first paint so the page never flashes.
+  try { if (localStorage.getItem('books-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) { /* storage unavailable */ }
+</script>
+</head>
+<body>
+
+<!-- Figma 1:2 "MacBook Pro 14' - 4" -->
+<section class="hero" data-node-id="1:3">
+  <div class="hero__photo" data-node-id="1:4" data-name="image 81" aria-hidden="true">
+    <img src="assets/books/hero-bookstore.png" alt="">
+  </div>
+
+  <header class="site-header" data-node-id="1:5">
+    <a class="brand" href="#" aria-label="Penguin Random House India — home" data-node-id="1:12">
+      <img class="brand__penguin" src="assets/books/logo-penguin.png" alt="" width="35" height="49" data-node-id="1:13">
+      <span class="brand__wordmark" data-node-id="1:14"><img src="assets/books/logo-wordmark.png" alt=""></span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main" data-node-id="1:7">
+      <a href="#discover" data-node-id="1:8">Discover</a>
+      <a href="#publishing" data-node-id="1:9">Publishing Group</a>
+      <a href="#young-readers" data-node-id="1:10">Young Readers</a>
+      <a href="#about" data-node-id="1:11">About</a>
+    </nav>
+
+    <div class="header-actions" data-node-id="1:429">
+      <button class="avatar" type="button" aria-label="Your account" data-node-id="1:420">
+        <img class="avatar__ring" src="assets/books/avatar-ring.svg" alt="" width="48" height="48" data-node-id="1:418">
+        <img class="avatar__photo" src="assets/books/avatar.png" alt="" width="48" height="48" data-node-id="1:419">
+      </button>
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" data-node-id="1:428">
+        <img src="assets/books/moon.svg" alt="" width="24" height="24" data-node-id="1:422">
+      </button>
+    </div>
+  </header>
+
+  <h1 class="hero__title" data-node-id="1:20">The right book.<br>At the right moment.</h1>
+
+  <form class="ask" role="search" data-node-id="1:32">
+    <span class="ask__sparkle" aria-hidden="true" data-node-id="1:34">✦</span>
+    <div class="ask__field" data-node-id="1:36">
+      <img class="ask__caret" src="assets/books/caret.svg" alt="" aria-hidden="true" data-node-id="1:37">
+      <label class="visually-hidden" for="ask-input">Describe the book you're looking for</label>
+      <input id="ask-input" name="q" type="text" autocomplete="off" placeholder="Try: a picture book about being brave" data-node-id="1:38">
+    </div>
+    <button class="ask__submit" type="submit" data-node-id="1:39">
+      <img src="assets/books/sparkles.svg" alt="" width="24" height="24" data-node-id="1:41">
+      <span data-node-id="1:43">Ask AI</span>
+    </button>
+  </form>
+
+  <ul class="moods" aria-label="Suggestions" data-node-id="1:44">
+    <li><button type="button" class="mood" style="--w:180px" data-prompt="Something cozy and comforting" data-node-id="1:45">☕ Cozy &amp; comforting</button></li>
+    <li><button type="button" class="mood" style="--w:190px" data-prompt="A can't-put-down thriller" data-node-id="1:47">ϟ Can't-put-down thriller</button></li>
+    <li><button type="button" class="mood" style="--w:170px" data-prompt="A gift for a 5-year-old" data-node-id="1:49">🧒 Gift for a 5-year-old</button></li>
+    <li><button type="button" class="mood" style="--w:120px" data-surprise data-node-id="1:51">🎲 Surprise me</button></li>
+  </ul>
+
+  <div class="band" data-node-id="1:21">
+    <img class="band__shadow" src="assets/books/band-shadow.svg" alt="" aria-hidden="true" data-node-id="1:30">
+  </div>
+</section>
+
+<!-- Empty in the design so far; kept at the design's size so later content slots in. -->
+<section class="section section--light" id="discover" aria-label="Discover"></section>
+<section class="section section--cream" id="publishing" aria-label="Publishing Group" data-node-id="1:31"></section>
+
+<script src="js/books.js?v=1" defer></script>
+</body>
+</html>

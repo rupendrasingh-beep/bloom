@@ -46,11 +46,13 @@ const server = http.createServer((req, res) => {
   if (pathname.endsWith('/')) pathname += 'index.html';
 
   // Resolve inside ./public only — never serve files outside it.
-  const file = path.normalize(path.join(ROOT, pathname));
+  let file = path.normalize(path.join(ROOT, pathname));
   if (!file.startsWith(ROOT + path.sep)) {
     res.writeHead(403);
     return res.end('Forbidden');
   }
+  // Clean URLs, as on Vercel: /books serves books.html.
+  if (!path.extname(file) && fs.existsSync(file + '.html')) file += '.html';
 
   fs.stat(file, (err, stat) => {
     if (err || !stat.isFile()) {

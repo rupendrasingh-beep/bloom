@@ -1,0 +1,319 @@
+/* Penguin Random House India landing page — built from Figma node 1:2 (1512px artboard). */
+
+@font-face { font-family: 'Makira'; src: url('../fonts/Makira-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Makira'; src: url('../fonts/Makira-Medium.otf') format('opentype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Makira'; src: url('../fonts/Makira-SemiBold.otf') format('opentype'); font-weight: 600; font-display: swap; }
+
+:root {
+  --ink: #000;
+  --page: #fff;
+  --cream: #f1eee3;
+  --hero: #000;
+  --orange: #ff6900;
+  --pill: #fff;
+  --pill-ink: #000;
+  --chip: #efefef;
+  --ask-bg: #fff;
+  --ask-border: #ffb8b8;
+  --ask-ink: #1a1a1a;
+  --placeholder: #716d6a;
+  --sparkle-bg: #fce8db;
+  --sparkle: #e66f31;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gutter: 16px;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --page: #121212;
+  --cream: #1d1b17;
+  --pill: #1c1c1c;
+  --pill-ink: #f2f2f2;
+  --chip: #2a2a2a;
+  --ask-bg: #1c1c1c;
+  --ask-border: rgba(255, 184, 184, 0.35);
+  --ask-ink: #f2f2f2;
+  --placeholder: #a29d99;
+  --sparkle-bg: rgba(230, 111, 49, 0.18);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; overflow-x: clip; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: 'Makira', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease;
+}
+img { display: block; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+/* ---------- Hero (black 0–987px, photo 0–856px, orange band 818–982px) ---------- */
+.hero {
+  position: relative;
+  z-index: 1; /* lets the band's shadow fall onto the section below */
+  min-height: 987px;
+  padding: 43px var(--gutter) 434px;
+  background: var(--hero);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(100% - 131px);
+  overflow: hidden;
+  opacity: 0.2;
+  pointer-events: none;
+}
+.hero__photo img {
+  position: absolute;
+  left: -10.75%;
+  top: -20.79%;
+  width: 121.51%;
+  height: 120.79%;
+  max-width: none;
+  object-fit: cover;
+}
+
+/* ---------- Header pill ---------- */
+.site-header {
+  position: relative;
+  width: min(1028px, 100%);
+  height: 90px;
+  padding: 0 30px 0 32px;
+  border-radius: 60px;
+  background: var(--pill);
+  color: var(--pill-ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.brand { display: flex; align-items: center; flex: none; }
+.brand__penguin { width: 35px; height: 49.233px; object-fit: cover; }
+.brand__wordmark { position: relative; width: 139px; height: 53.073px; overflow: hidden; }
+.brand__wordmark img {
+  position: absolute; top: 0; left: -28.64%;
+  width: 128.64%; height: 100%; max-width: none;
+}
+:root[data-theme="dark"] .brand { filter: brightness(0) invert(1); }
+
+.site-nav {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 32px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.site-nav a {
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.3s var(--ease-out), opacity 0.2s;
+}
+.site-nav a:hover { background-size: 100% 1px; }
+.site-nav a:active { opacity: 0.7; }
+
+.header-actions { display: flex; align-items: center; gap: 16px; flex: none; }
+
+.avatar {
+  position: relative;
+  width: 58px; height: 58px;
+  padding: 0; border: 0; border-radius: 50%;
+  background: none;
+  transition: transform 0.25s var(--ease-out);
+}
+.avatar img { position: absolute; left: 5px; top: 5px; }
+.avatar__photo { border-radius: 50%; object-fit: cover; }
+.avatar:hover { transform: scale(1.05); }
+.avatar:active { transform: scale(0.95); }
+
+.theme-toggle {
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 32px;
+  background: var(--chip);
+  transition: background-color 0.4s ease, transform 0.18s var(--ease-out);
+}
+.theme-toggle:hover img { rotate: -18deg; }
+.theme-toggle:active { transform: scale(0.92); }
+.theme-toggle img { transition: rotate 0.4s var(--ease-out); }
+:root[data-theme="dark"] .theme-toggle img { filter: invert(1); }
+
+/* ---------- Headline ---------- */
+.hero__title {
+  margin: 85px 0 0;
+  max-width: 505px;
+  font-size: 50px;
+  font-weight: 500;
+  line-height: 1.26;
+  text-align: center;
+  color: #fff;
+}
+
+/* ---------- Ask box ---------- */
+.ask {
+  margin-top: 51px;
+  width: min(720px, 100%);
+  height: 80px;
+  padding: 0 13px 0 31px; /* plus the 1px border = Figma's 14px / 32px insets */
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--ask-border);
+  border-radius: 80px;
+  background: var(--ask-bg);
+  transition: box-shadow 0.3s var(--ease-out), background-color 0.4s ease, border-color 0.4s ease;
+}
+.ask:focus-within { box-shadow: 0 0 0 4px rgba(255, 105, 0, 0.18), 0 18px 40px -18px rgba(255, 105, 0, 0.55); }
+
+.ask__sparkle {
+  flex: none;
+  width: 31px; height: 31px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: var(--sparkle-bg);
+  color: var(--sparkle);
+  font: 16px/1 'Inter', sans-serif;
+}
+.ask:focus-within .ask__sparkle { animation: twinkle 1.6s ease-in-out infinite; }
+
+.ask__field {
+  flex: 1;
+  min-width: 0;
+  margin: 0 12px 0 17px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 1px;
+}
+.ask__caret { flex: none; animation: blink 1.06s steps(1) infinite; }
+.ask__field:focus-within .ask__caret,
+.ask__field.has-value .ask__caret { display: none; }
+
+.ask input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font-size: 16px;
+  color: var(--ask-ink);
+}
+.ask input::placeholder { color: var(--placeholder); opacity: 1; }
+
+.ask__submit {
+  flex: none;
+  width: 135px; height: 56px;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  border: 0; border-radius: 28px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.18s var(--ease-out), background-color 0.2s ease, box-shadow 0.25s ease;
+}
+.ask__submit:hover { background: #1f1f1f; box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.6); }
+.ask__submit:hover img { animation: twinkle 0.9s ease-in-out; }
+.ask__submit:active { transform: scale(0.96); }
+:root[data-theme="dark"] .ask__submit { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+
+.ask.is-empty { animation: nudge 0.4s var(--ease-out); }
+
+/* ---------- Mood chips ---------- */
+.moods {
+  margin: 34px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+.mood {
+  width: var(--w);
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 70px;
+  background: rgba(217, 217, 217, 0);
+  color: #fffdfc;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
+}
+.mood:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.24); transform: translateY(-2px); }
+.mood:active { transform: scale(0.96); }
+.mood[aria-pressed="true"] { border-color: rgba(255, 105, 0, 0.7); background: rgba(255, 105, 0, 0.14); }
+
+/* ---------- Orange band and its shadow ---------- */
+.band {
+  position: absolute;
+  left: 0; right: 0; bottom: 5px;
+  height: 164px;
+  background: var(--orange);
+}
+.band__shadow {
+  position: absolute;
+  top: -138px;
+  left: calc(50% + 4.5px);
+  translate: -50% 0;
+  width: 101.39%;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+}
+
+/* ---------- Sections below the hero (empty in the design so far) ---------- */
+.section { transition: background-color 0.4s ease; }
+.section--light { min-height: 502px; background: var(--page); }
+.section--cream { min-height: 925px; background: var(--cream); }
+
+/* ---------- Motion ---------- */
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes twinkle { 50% { transform: scale(1.18) rotate(12deg); } }
+@keyframes nudge { 20%, 60% { translate: -6px 0; } 40%, 80% { translate: 6px 0; } }
+@keyframes rise { from { opacity: 0; translate: 0 14px; } }
+
+.hero__title, .ask, .moods { animation: rise 0.7s var(--ease-out) both; }
+.ask { animation-delay: 0.12s; }
+.moods { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Narrower screens ---------- */
+@media (max-width: 960px) {
+  .site-nav { display: none; }
+}
+
+@media (max-width: 640px) {
+  .hero { padding-top: 16px; padding-bottom: 360px; min-height: 0; }
+  .site-header { height: 72px; padding: 0 12px 0 20px; }
+  .brand__penguin { width: 28px; height: 39.4px; }
+  .brand__wordmark { width: 111px; height: 42.4px; }
+  .header-actions { gap: 8px; }
+  .hero__title { margin-top: 64px; font-size: 34px; }
+  .ask { margin-top: 36px; height: 64px; padding: 0 8px 0 16px; }
+  .ask__field { margin: 0 8px 0 12px; }
+  .ask__submit { width: auto; height: 48px; padding: 0 16px; }
+  .moods { margin-top: 24px; gap: 10px; }
+  .mood { width: auto; padding: 0 16px; }
+}
