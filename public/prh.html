@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penguin Random House India</title>
+<meta name="description" content="The right book. At the right moment. Ask AI to find your next read.">
+<link rel="preload" href="prh/assets/hero-bookstore.jpg" as="image">
+<link rel="stylesheet" href="prh/prh.css?v=1">
+<script>
+  // Apply the saved theme before first paint so the header doesn't flash.
+  try { if (localStorage.getItem('prh-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- Figma: MacBook Pro 14" - 4 (1:2) -->
+<section class="hero" data-node-id="1:3">
+  <img class="hero__bg" src="prh/assets/hero-bookstore.jpg" alt="" data-node-id="1:4">
+
+  <header class="site-header" data-node-id="1:5">
+    <a class="site-header__logo" href="prh.html" data-node-id="1:12">
+      <img src="prh/assets/logo.png" width="174" height="54" alt="Penguin Random House India">
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Main" data-node-id="1:7">
+      <a href="#discover">Discover</a>
+      <a href="#publishing-group">Publishing Group</a>
+      <a href="#young-readers">Young Readers</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div class="site-header__actions" data-node-id="1:429">
+      <button class="avatar" type="button" aria-label="Your account" data-node-id="1:420">
+        <img src="prh/assets/avatar.png" width="58" height="58" alt="">
+      </button>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" data-node-id="1:428">
+        <img src="assets/imgMoon.svg" width="24" height="24" alt="">
+      </button>
+      <button class="icon-btn menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="hero__content">
+    <h1 class="hero__title" data-node-id="1:20">The right book.<br>At the right moment.</h1>
+
+    <form class="ask" role="search" data-node-id="1:32">
+      <span class="ask__sparkle" aria-hidden="true" data-node-id="1:34">✦</span>
+      <label class="visually-hidden" for="ask-input">Describe the book you're looking for</label>
+      <input class="ask__input" id="ask-input" name="q" type="text" autocomplete="off"
+             placeholder="Try: a picture book about being brave" data-node-id="1:38">
+      <button class="ask__submit" type="submit" data-node-id="1:39">
+        <img src="prh/assets/sparkle.png" width="24" height="24" alt="">
+        <span>Ask AI</span>
+      </button>
+    </form>
+
+    <ul class="chips" aria-label="Suggestions" data-node-id="1:44">
+      <li><button class="chip" type="button" data-query="Something cozy and comforting">☕ Cozy &amp; comforting</button></li>
+      <li><button class="chip" type="button" data-query="A can't-put-down thriller">ϟ Can't-put-down thriller</button></li>
+      <li><button class="chip" type="button" data-query="A gift for a 5-year-old">🧒 Gift for a 5-year-old</button></li>
+      <li><button class="chip" type="button" data-surprise>🎲 Surprise me</button></li>
+    </ul>
+  </div>
+</section>
+
+<div class="band" data-node-id="1:21" aria-hidden="true">
+  <div class="band__shadow" data-node-id="1:30"></div>
+</div>
+
+<script src="prh/prh.js?v=1" defer></script>
+</body>
+</html>
