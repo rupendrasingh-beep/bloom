@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rayyan Natural Water</title>
+<meta name="description" content="Rayyan — natural mineral water drawn from a desert aquifer 60 km north of Doha since 1984.">
+<meta name="theme-color" content="#002f86">
+<link rel="preload" href="fonts/baloo-2-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nunito-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/hero-poster.webp" as="image">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="styles/rayyan.css?v=1">
+</head>
+<body class="is-loading">
+
+<!-- Intro: the logo fills with water, then the curtain lifts -->
+<div class="loader" aria-hidden="true">
+  <div class="loader__logo">
+    <img src="assets/logo.png" alt="" width="135" height="99">
+    <div class="loader__fill"><img src="assets/logo.png" alt="" width="135" height="99"></div>
+  </div>
+  <div class="loader__count"><span>0</span>%</div>
+</div>
+
+<div class="cursor" aria-hidden="true"><div class="cursor__dot"></div><div class="cursor__ring"></div></div>
+<canvas class="ripples" aria-hidden="true"></canvas>
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+<header class="header">
+  <a class="header__logo" href="#top" aria-label="Rayyan home"><img src="assets/logo.png" alt="Rayyan Natural Water" width="135" height="99"></a>
+  <nav class="nav" aria-label="Primary">
+    <span class="nav__blob" aria-hidden="true"></span>
+    <a href="#story" class="is-active">About Rayyan</a>
+    <a href="#bottling">Our Products</a>
+    <a href="#values">Sustainability</a>
+    <a href="#source">What’s happening</a>
+  </nav>
+  <div class="header__tools">
+    <button class="lang" type="button" aria-haspopup="listbox" aria-expanded="false">
+      <img src="assets/icon-globe.png" alt="" width="18" height="18">
+      <span class="lang__label">EN</span>
+      <img class="lang__caret" src="assets/icon-caret.png" alt="" width="8" height="5">
+      <span class="lang__menu" role="listbox">
+        <span role="option" data-lang="EN" aria-selected="true">English</span>
+        <span role="option" data-lang="AR" aria-selected="false">العربية</span>
+      </span>
+    </button>
+    <div class="stores">
+      <a class="round-btn magnetic" href="#footer" aria-label="Download on the App Store"><img src="assets/icon-apple.png" alt="" width="12" height="15"></a>
+      <a class="round-btn magnetic" href="#footer" aria-label="Get it on Google Play"><img src="assets/icon-play.png" alt="" width="14" height="14"></a>
+    </div>
+  </div>
+  <button class="burger" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+</header>
+
+<main id="top">
+
+  <!-- Fold 01 — Video intro -->
+  <section class="hero" aria-label="Rayyan">
+    <div class="hero__media"><img src="assets/hero-poster.webp" alt="" width="1728" height="999"></div>
+    <canvas class="hero__bubbles" aria-hidden="true"></canvas>
+    <div class="hero__shade" aria-hidden="true"></div>
+    <a class="scroll-down" href="#story" aria-label="Scroll to Rayyan story"><img src="assets/scroll-down.png" alt="" width="45" height="45"></a>
+  </section>
+
+  <!-- Fold 02 — Rayyan story -->
+  <section class="story stage-wrap" id="story">
+    <div class="story__fade" aria-hidden="true"></div>
+    <div class="stage">
+      <div class="divider" aria-hidden="true"><img src="assets/divider.png" alt="" width="14" height="120"><i></i></div>
+      <p class="label" data-reveal>Rayaan Story</p>
+      <h2 class="story__title h-xl" data-split>Founded in<br> 1984 by Khalid Bin Mohammed Al Rabban</h2>
+      <p class="story__text lead" data-reveal style="--d:.15s">Drawn from a natural reservoir, Rayyan delivers pure, high-quality mineral water with world-class standards and commitment to sustainability.</p>
+    </div>
+    <div class="story__visual">
+      <img src="assets/story-bottle.webp" alt="A Rayyan bottle rising from the desert aquifer through layers of earth" width="1728" height="1301" loading="lazy">
+    </div>
+  </section>
+
+  <!-- Fold 03 — Mission and vision -->
+  <section class="mission stage-wrap" id="mission">
+    <div class="stage">
+      <div class="divider" aria-hidden="true"><img src="assets/divider.png" alt="" width="14" height="120"><i></i></div>
+      <p class="label" data-reveal>Mission and Vision</p>
+      <h2 class="mission__title h-xl" data-split>Pioneering natural refreshment through innovation, care, and sustainability.</h2>
+
+      <article class="founder tilt" data-reveal>
+        <div class="founder__flag"><img src="assets/founder-flag.webp" alt="" width="290" height="224" loading="lazy"></div>
+        <img class="founder__photo" src="assets/founder.webp" alt="Khalid Bin Mohammed Al Rabban" width="290" height="263" loading="lazy">
+        <div class="founder__shade" aria-hidden="true"></div>
+        <p class="founder__role">Founder</p>
+        <h3 class="founder__name">Khalid Bin Mohammed Al Rabban</h3>
+        <span class="tilt__glare" aria-hidden="true"></span>
+      </article>
+
+      <ol class="timeline" data-reveal style="--d:.1s">
+        <li class="tl-cell"><span class="tl-year" data-count="1984">1984</span><p>Rayyan launched at “aquifer-to-bottle” desert site</p></li>
+        <li class="tl-cell"><span class="tl-year" data-count="1996">1996</span><p>First in Qatar/Middle East to shift to PET preforms &amp; in-house bottle making</p></li>
+        <li class="tl-cell"><span class="tl-year" data-count="2000">2000</span><p>Upgraded to automated tech; built in-house quality control labs</p></li>
+        <li class="tl-cell"><span class="tl-year" data-count="2011">2011</span><p>HACCP certified; reinforced ISO 9001 systems for food safety and quality</p></li>
+        <li class="tl-cell"><span class="tl-year" data-count="2018">2018</span><p>Brand identity revamp &amp; national campaign launched, reaching millions</p></li>
+        <li class="tl-cell"><span class="tl-year" data-count="2025">2025</span><p>Team scaled to 500–1,000+ across corporate &amp; manufacturing</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Fold 04 — The source -->
+  <section class="source stage-wrap" id="source">
+    <div class="stage">
+      <div class="divider" aria-hidden="true"><img src="assets/divider.png" alt="" width="14" height="120"><i></i></div>
+      <img class="source__glow" src="assets/source-glow.webp" alt="" aria-hidden="true" loading="lazy">
+      <div class="source__scene" data-parallax>
+        <div class="source__float">
+          <img class="source__island" src="assets/source-island.webp" alt="The Source — a desert oasis around a natural reservoir" width="1167" height="860" loading="lazy">
+          <p class="source__the" aria-hidden="true"><span>T</span><span>H</span><span>E</span></p>
+          <img class="source__shadow" src="assets/source-shadow.webp" alt="" aria-hidden="true" loading="lazy">
+          <div class="source__lake" aria-hidden="true"><img src="assets/lake.webp" alt="" width="539" height="191" loading="lazy"><i></i></div>
+          <div class="pin pin--chlorine" style="--i:0">
+            <span class="pin__label">Chlorine-Free</span>
+            <img class="pin__check" src="assets/check.png" alt="" width="15" height="15">
+            <img class="pin__stem" src="assets/pin-a.png" alt="" width="12" height="32">
+          </div>
+          <div class="pin pin--mineral" style="--i:1">
+            <span class="pin__label">Natural Mineral Source</span>
+            <img class="pin__check" src="assets/check.png" alt="" width="15" height="15">
+            <img class="pin__stem" src="assets/pin-b.png" alt="" width="12" height="25">
+          </div>
+        </div>
+      </div>
+      <p class="source__quote h-md" data-scrub>Drawn from a natural reservoir<br> <em>60 km north of Doha</em>, filtered with zero-chlorine technology for a crisp, refreshing taste.”</p>
+    </div>
+  </section>
+
+  <!-- Fold 05 — Our values -->
+  <section class="values stage-wrap" id="values">
+    <div class="stage">
+      <div class="divider" aria-hidden="true"><img src="assets/divider.png" alt="" width="14" height="120"><i></i></div>
+      <p class="label" data-reveal>Our Values</p>
+      <h2 class="values__title h-xl" data-split>Nature’s goodness for you and your community.</h2>
+      <p class="values__text lead" data-reveal style="--d:.2s">You deserve the best nature has to offer &amp; we take pride in providing the natural products you deserve and local community.</p>
+      <ul class="values__grid">
+        <li class="value" data-reveal style="--d:0s"><span class="value__icon"><img src="assets/value-icon-1.png" alt="" width="94" height="94"><i style="-webkit-mask-image:url(assets/value-icon-1.png);mask-image:url(assets/value-icon-1.png)"></i></span><h3>Quality is paramount</h3><p>We ensure quality at every step to uphold the highest standards.</p></li>
+        <li class="value" data-reveal style="--d:.12s"><span class="value__icon"><img src="assets/value-icon-2.png" alt="" width="94" height="94"><i style="-webkit-mask-image:url(assets/value-icon-2.png);mask-image:url(assets/value-icon-2.png)"></i></span><h3>Natural<br>Focus</h3><p>We proudly offer nature’s best products for you and the community.</p></li>
+        <li class="value" data-reveal style="--d:.24s"><span class="value__icon"><img src="assets/value-icon-3.png" alt="" width="94" height="94"><i style="-webkit-mask-image:url(assets/value-icon-3.png);mask-image:url(assets/value-icon-3.png)"></i></span><h3>Innovation<br>is Key</h3><p>We invest in technology &amp; people to stay ahead in our industry.</p></li>
+        <li class="value" data-reveal style="--d:.36s"><span class="value__icon"><img src="assets/value-icon-4.png" alt="" width="94" height="94"><i style="-webkit-mask-image:url(assets/value-icon-4.png);mask-image:url(assets/value-icon-4.png)"></i></span><h3>Community Engagement</h3><p>We partner with others to create a positive impact for our consumers.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Fold 06 — Bottling -->
+  <section class="bottling stage-wrap" id="bottling">
+    <div class="stage">
+      <div class="divider" aria-hidden="true"><img src="assets/divider.png" alt="" width="14" height="120"><i></i></div>
+      <p class="label" data-reveal>Bottling</p>
+      <h2 class="bottling__title h-md" data-split>Hygienically made, contactless PET bottles—light, eco-friendly, and precisely packed.</h2>
+
+      <article class="product" data-reveal>
+        <div class="product__tilt">
+          <img class="product__art" src="assets/product-card.webp" alt="Rayyan Sparkling Water glass bottles in 750 ml, 500 ml and 250 ml" width="1290" height="802" loading="lazy">
+          <canvas class="product__fizz" aria-hidden="true"></canvas>
+          <div class="product__copy">
+            <p class="product__eyebrow">[ Bottling ]</p>
+            <div class="product__slider" aria-live="polite">
+              <h3 class="product__name is-current"><span class="l1">Sparkling</span><span class="l2">Water</span></h3>
+              <h3 class="product__name" aria-hidden="true"><span class="l1">Glass</span><span class="l2">Bottle</span></h3>
+            </div>
+            <p class="product__text">A bottle of Rayyan Sparkling Water — pure refreshment and unforgettable taste, all in one elegant package.</p>
+          </div>
+          <button class="product__arrow product__arrow--prev magnetic" type="button" aria-label="Previous">
+            <svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><path d="M27 14H2M2 14l6-6M2 14l6 6" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="product__arrow product__arrow--next magnetic" type="button" aria-label="Next">
+            <svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><path d="M1 14h25M26 14l-6-6M26 14l-6 6" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="product__sizes" aria-label="Sizes">
+            <li><button type="button" class="size is-active" data-i="0" aria-label="750 ml Sparkling Water"></button></li>
+            <li><button type="button" class="size" data-i="1" aria-label="500 ml Sparkling Water"></button></li>
+            <li><button type="button" class="size" data-i="2" aria-label="250 ml Sparkling Water"></button></li>
+          </ul>
+          <span class="tilt__glare" aria-hidden="true"></span>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" id="footer">
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Natural Water</span><i></i><span>Desert Aquifer Water</span><i></i><span>Premium Mineral Water</span><i></i><span>Purity Bottled at Source</span><i></i><span>Sparkling water</span><i></i>
+    </div>
+  </div>
+  <div class="footer__body">
+    <img class="footer__tex" src="assets/footer-texture.webp" alt="" aria-hidden="true" loading="lazy">
+    <div class="footer__inner">
+      <a class="btn-register" href="#footer"><span>Register with us</span></a>
+      <a class="footer__logo" href="#top" aria-label="Back to top"><img src="assets/logo.png" alt="Rayyan Natural Water" width="122" height="89"></a>
+      <div class="footer__stores">
+        <a href="#footer" class="store" aria-label="Get it on Google Play"><img src="assets/store-google.png" alt="Get it on Google Play" width="144" height="48"></a>
+        <a href="#footer" class="store" aria-label="Download on the App Store"><img src="assets/store-apple.png" alt="Download on the App Store" width="144" height="48"></a>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#story">About Rayyan</a><a href="#bottling">Our Products</a><a href="#values">Sustainability</a><a href="#source">What’s Happening</a>
+      </nav>
+      <hr class="footer__rule">
+      <div class="footer__legal">
+        <span>2025@ All right Reserved</span><a href="#footer">Privacy Policy</a><a href="#footer">Terms and Conditions</a>
+      </div>
+      <div class="footer__social">
+        <span>Follow us</span>
+        <a href="#footer" aria-label="Instagram"><img src="assets/social-instagram.png" alt="" width="20" height="20"></a>
+        <a href="#footer" aria-label="X"><img src="assets/social-x.png" alt="" width="20" height="20"></a>
+        <a href="#footer" aria-label="YouTube"><img src="assets/social-youtube.png" alt="" width="20" height="20"></a>
+        <a href="#footer" aria-label="Facebook"><img src="assets/social-facebook.png" alt="" width="20" height="20"></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/rayyan.js?v=1" defer></script>
+</body>
+</html>
