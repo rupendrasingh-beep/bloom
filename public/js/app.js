@@ -286,6 +286,7 @@
     ['306:2778', 'Notifications', '306:2828'],
     ['306:2780', 'Deals & Perks', '306:2706'],
     ['306:2782', 'Sports Groups', '306:2582'],
+    ['ui:bookshelf', 'Bookshelf', () => { location.href = 'bookshelf.html'; }],
   ];
   const sideMenu = $('306:2764');
   const nav = [];
@@ -314,6 +315,7 @@
       nav.forEach((n) => n.el.classList.remove('is-active'));
       el.classList.add('is-active');
       if (i === 0) scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      else if (typeof target === 'function') target();
       else if (target && $(target)) {
         const y = $(target).getBoundingClientRect().top + scrollY - 40;
         scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });

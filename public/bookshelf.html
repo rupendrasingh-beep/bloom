@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bookshelf</title>
+<meta name="description" content="Find the right book at the right moment: ask AI for picks and build your own bookshelf.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inria+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/shelf-page.css?v=1">
+<link rel="stylesheet" href="styles/bookshelf.css?v=2">
+<script>try { if (localStorage.getItem('bloom-theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}</script>
+</head>
+<body class="sp">
+<header class="sp-header" data-node-id="29:36">
+  <div class="sp-header-row">
+    <a class="sp-brand" href="./" aria-label="Penguin Random House India, home">
+      <img class="sp-brand-mark" src="assets/shelf/logo-mark.png" alt="" width="35" height="49">
+      <span class="sp-brand-word"><img src="assets/shelf/logo-word.png" alt=""></span>
+    </a>
+    <nav class="sp-nav" aria-label="Main">
+      <button type="button" class="sp-nav-item" aria-haspopup="true">Merchandise<img src="assets/shelf/chevron-down.svg" alt="" width="15" height="15"></button>
+      <button type="button" class="sp-nav-item" aria-haspopup="true">Authors<img src="assets/shelf/chevron-down.svg" alt="" width="15" height="15"></button>
+      <button type="button" class="sp-nav-item" aria-haspopup="true">Blog<img src="assets/shelf/chevron-down.svg" alt="" width="15" height="15"></button>
+      <button type="button" class="sp-nav-item" aria-haspopup="true">Our Company<img src="assets/shelf/chevron-down.svg" alt="" width="15" height="15"></button>
+      <a class="sp-nav-item" href="#">Publish with Us</a>
+    </nav>
+    <div class="sp-tools">
+      <div class="sp-tool-pair">
+        <button type="button" class="sp-round sp-search-btn" aria-label="Search books"><img src="assets/shelf/search.svg" alt="" width="24" height="24"></button>
+        <button type="button" class="sp-round sp-theme" aria-label="Switch to dark theme" aria-pressed="false"><img src="assets/shelf/moon.svg" alt="" width="24" height="24"></button>
+      </div>
+      <span class="sp-avatar"><img src="assets/shelf/avatar-ring.svg" alt="" width="48" height="48"><img src="assets/shelf/avatar.png" alt="Your profile" width="48" height="48"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="sp-fold" data-node-id="29:7" aria-labelledby="sp-headline">
+    <div class="sp-bg" aria-hidden="true"><img src="assets/shelf/hero-library.png" alt=""></div>
+    <div class="sp-search-ai" data-node-id="29:21">
+      <h1 class="sp-headline" id="sp-headline">The right book.<br>At the right moment.</h1>
+      <form class="sp-ask" role="search" data-node-id="29:23">
+        <div class="sp-halo" aria-hidden="true"><canvas class="mesh" data-mesh='{"p00":{"x":0,"y":0,"color":{"r":1,"g":0.42,"b":0.42,"a":1}},"p10":{"x":33,"y":0,"color":{"r":1,"g":0.64,"b":0.42,"a":1}},"p20":{"x":67,"y":0,"color":{"r":1,"g":0.82,"b":0.42,"a":1}},"p30":{"x":100,"y":0,"color":{"r":1,"g":0.82,"b":0.4,"a":1}},"p01":{"x":0,"y":33,"color":{"r":0.7,"g":0.3,"b":0.6,"a":1}},"p11":{"x":33,"y":33,"color":{"r":0.8,"g":0.55,"b":0.5,"a":1}},"p21":{"x":67,"y":33,"color":{"r":0.9,"g":0.7,"b":0.45,"a":1}},"p31":{"x":100,"y":33,"color":{"r":0.5,"g":0.7,"b":0.35,"a":1}},"p02":{"x":0,"y":67,"color":{"r":0.4,"g":0.5,"b":0.7,"a":1}},"p12":{"x":33,"y":67,"color":{"r":0.35,"g":0.65,"b":0.65,"a":1}},"p22":{"x":67,"y":67,"color":{"r":0.2,"g":0.65,"b":0.55,"a":1}},"p32":{"x":100,"y":67,"color":{"r":0.1,"g":0.55,"b":0.7,"a":1}},"p03":{"x":0,"y":100,"color":{"r":0.02,"g":0.84,"b":0.63,"a":1}},"p13":{"x":33,"y":100,"color":{"r":1,"g":0.0991,"b":0.8048,"a":1}},"p23":{"x":67,"y":100,"color":{"r":0,"g":0.0167,"b":1,"a":1}},"p33":{"x":100,"y":100,"color":{"r":0.07,"g":0.54,"b":0.7,"a":1}},"tessellation":128}'></canvas></div>
+        <div class="sp-bar">
+          <span class="sp-sparkle" aria-hidden="true">✦</span>
+          <label class="sp-field">
+            <span class="sp-caret" aria-hidden="true"><img src="assets/shelf/caret.svg" alt=""></span>
+            <input type="text" name="q" maxlength="160" autocomplete="off" aria-label="Describe the book you're looking for">
+            <span class="sp-placeholder" aria-hidden="true">Try: a picture book about being brave</span>
+          </label>
+          <button type="submit" class="sp-ask-btn"><img src="assets/shelf/sparkle-ai.svg" alt="" width="24" height="24"><span>Ask AI</span></button>
+        </div>
+      </form>
+    </div>
+    <div class="sp-fan" data-node-id="29:13" aria-hidden="true">
+      <img class="sp-fan-book" src="assets/shelf/cover-1.png" alt="" width="156" height="235" style="--x:20.113%;--y:66.843%;--r:-12.76deg;--i:0">
+      <img class="sp-fan-book" src="assets/shelf/cover-2.png" alt="" width="156" height="235" style="--x:30.245%;--y:66.869%;--r:14.44deg;--i:1">
+      <img class="sp-fan-book" src="assets/shelf/cover-3.png" alt="" width="156" height="235" style="--x:40.268%;--y:72.492%;--r:-7.08deg;--i:2">
+      <img class="sp-fan-book" src="assets/shelf/cover-4.png" alt="" width="156" height="235" style="--x:49.906%;--y:83.393%;--r:20.98deg;--i:3">
+      <img class="sp-fan-book" src="assets/shelf/cover-5.png" alt="" width="156" height="235" style="--x:61.334%;--y:78.059%;--r:2.7deg;--i:4">
+      <img class="sp-fan-book" src="assets/shelf/cover-6.png" alt="" width="156" height="235" style="--x:72.126%;--y:68.934%;--r:-22.01deg;--i:5">
+      <img class="sp-fan-book" src="assets/shelf/cover-7.png" alt="" width="156" height="235" style="--x:77.978%;--y:81.446%;--r:27.06deg;--i:6">
+    </div>
+  </section>
+
+  <section class="sp-shelf" id="shelf" data-bookshelf aria-labelledby="bs-title"></section>
+</main>
+
+<script src="js/mesh.js?v=2"></script>
+<script src="js/bookshelf.js?v=2"></script>
+<script src="js/shelf-page.js?v=1"></script>
+</body>
+</html>

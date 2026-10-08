@@ -1,0 +1,949 @@
+[
+ {
+  "id": "project-hail-mary",
+  "title": "Project Hail Mary",
+  "author": "Andy Weir",
+  "year": 2021,
+  "pages": 476,
+  "kind": "fiction",
+  "genres": [
+   "scifi"
+  ],
+  "vibes": [
+   "funny",
+   "mindbending",
+   "inspiring"
+  ],
+  "colors": [
+   "#0f3b5f",
+   "#f5a623"
+  ],
+  "blurb": "A lone astronaut wakes up light-years from home with no memory and one job: save Earth. Science-powered problem solving and an unforgettable friendship."
+ },
+ {
+  "id": "the-martian",
+  "title": "The Martian",
+  "author": "Andy Weir",
+  "year": 2011,
+  "pages": 369,
+  "kind": "fiction",
+  "genres": [
+   "scifi"
+  ],
+  "vibes": [
+   "funny",
+   "thrilling"
+  ],
+  "colors": [
+   "#b5442c",
+   "#ffd9a0"
+  ],
+  "blurb": "Stranded on Mars, a botanist has to science his way to survival, one sarcastic log entry at a time."
+ },
+ {
+  "id": "dune",
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "year": 1965,
+  "pages": 617,
+  "kind": "fiction",
+  "genres": [
+   "scifi"
+  ],
+  "vibes": [
+   "mindbending",
+   "thrilling"
+  ],
+  "colors": [
+   "#c98a3c",
+   "#3b1d0e"
+  ],
+  "blurb": "Politics, prophecy and giant sandworms on the desert planet Arrakis. The epic that shaped modern science fiction."
+ },
+ {
+  "id": "recursion",
+  "title": "Recursion",
+  "author": "Blake Crouch",
+  "year": 2019,
+  "pages": 336,
+  "kind": "fiction",
+  "genres": [
+   "scifi",
+   "mystery"
+  ],
+  "vibes": [
+   "mindbending",
+   "thrilling"
+  ],
+  "colors": [
+   "#1d1f3f",
+   "#53d6ff"
+  ],
+  "blurb": "A detective and a neuroscientist chase a technology that lets people relive memories, and reality starts to unravel."
+ },
+ {
+  "id": "hitchhikers-guide",
+  "title": "The Hitchhiker's Guide to the Galaxy",
+  "author": "Douglas Adams",
+  "year": 1979,
+  "pages": 224,
+  "kind": "fiction",
+  "genres": [
+   "scifi"
+  ],
+  "vibes": [
+   "funny"
+  ],
+  "colors": [
+   "#163d2a",
+   "#c6ff4d"
+  ],
+  "blurb": "Minutes before Earth is demolished, Arthur Dent hitches a ride into the most absurd, hilarious corners of the universe."
+ },
+ {
+  "id": "klara-and-the-sun",
+  "title": "Klara and the Sun",
+  "author": "Kazuo Ishiguro",
+  "year": 2021,
+  "pages": 303,
+  "kind": "fiction",
+  "genres": [
+   "literary",
+   "scifi"
+  ],
+  "vibes": [
+   "heartfelt",
+   "mindbending"
+  ],
+  "colors": [
+   "#f2c14e",
+   "#7a3e16"
+  ],
+  "blurb": "An Artificial Friend watches the human world from a shop window and learns what it means to love. Quiet, luminous, haunting."
+ },
+ {
+  "id": "station-eleven",
+  "title": "Station Eleven",
+  "author": "Emily St. John Mandel",
+  "year": 2014,
+  "pages": 333,
+  "kind": "fiction",
+  "genres": [
+   "literary",
+   "scifi"
+  ],
+  "vibes": [
+   "heartfelt"
+  ],
+  "colors": [
+   "#24364a",
+   "#f3b6a0"
+  ],
+  "blurb": "After a pandemic collapses civilisation, a travelling troupe keeps Shakespeare alive, because survival is insufficient."
+ },
+ {
+  "id": "the-midnight-library",
+  "title": "The Midnight Library",
+  "author": "Matt Haig",
+  "year": 2020,
+  "pages": 288,
+  "kind": "fiction",
+  "genres": [
+   "literary",
+   "fantasy"
+  ],
+  "vibes": [
+   "heartfelt",
+   "inspiring"
+  ],
+  "colors": [
+   "#14204a",
+   "#9fb7ff"
+  ],
+  "blurb": "Between life and death is a library holding every life you could have lived. Which one would you choose?"
+ },
+ {
+  "id": "house-cerulean-sea",
+  "title": "The House in the Cerulean Sea",
+  "author": "TJ Klune",
+  "year": 2020,
+  "pages": 394,
+  "kind": "fiction",
+  "genres": [
+   "fantasy"
+  ],
+  "vibes": [
+   "cozy",
+   "heartfelt",
+   "funny"
+  ],
+  "colors": [
+   "#2a8fa3",
+   "#ffe7c2"
+  ],
+  "blurb": "A by-the-book caseworker is sent to an island orphanage of magical children, and his grey life bursts into colour."
+ },
+ {
+  "id": "legends-and-lattes",
+  "title": "Legends & Lattes",
+  "author": "Travis Baldree",
+  "year": 2022,
+  "pages": 296,
+  "kind": "fiction",
+  "genres": [
+   "fantasy"
+  ],
+  "vibes": [
+   "cozy"
+  ],
+  "colors": [
+   "#6b3f2a",
+   "#f1c27d"
+  ],
+  "blurb": "A battle-weary orc retires her sword to open the first coffee shop in town. Low stakes, warm heart."
+ },
+ {
+  "id": "the-hobbit",
+  "title": "The Hobbit",
+  "author": "J.R.R. Tolkien",
+  "year": 1937,
+  "pages": 310,
+  "kind": "fiction",
+  "genres": [
+   "fantasy"
+  ],
+  "vibes": [
+   "cozy",
+   "thrilling"
+  ],
+  "colors": [
+   "#2f5d3a",
+   "#e8d39a"
+  ],
+  "blurb": "A comfort-loving hobbit is swept into an adventure with dwarves, a wizard and a dragon guarding a mountain of gold."
+ },
+ {
+  "id": "name-of-the-wind",
+  "title": "The Name of the Wind",
+  "author": "Patrick Rothfuss",
+  "year": 2007,
+  "pages": 662,
+  "kind": "fiction",
+  "genres": [
+   "fantasy"
+  ],
+  "vibes": [
+   "thrilling",
+   "heartfelt"
+  ],
+  "colors": [
+   "#5a1a1a",
+   "#e0a85a"
+  ],
+  "blurb": "A legendary hero tells his own story, from street orphan to the most gifted student magic has ever seen."
+ },
+ {
+  "id": "circe",
+  "title": "Circe",
+  "author": "Madeline Miller",
+  "year": 2018,
+  "pages": 393,
+  "kind": "fiction",
+  "genres": [
+   "fantasy",
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt",
+   "inspiring"
+  ],
+  "colors": [
+   "#8a2b1e",
+   "#f0c060"
+  ],
+  "blurb": "The Greek witch banished to an island finds her power, and her voice, in a lyrical retelling of myth."
+ },
+ {
+  "id": "gone-girl",
+  "title": "Gone Girl",
+  "author": "Gillian Flynn",
+  "year": 2012,
+  "pages": 415,
+  "kind": "fiction",
+  "genres": [
+   "mystery"
+  ],
+  "vibes": [
+   "thrilling",
+   "mindbending"
+  ],
+  "colors": [
+   "#111111",
+   "#e23b3b"
+  ],
+  "blurb": "On their fifth anniversary, Amy disappears. Every chapter flips what you thought you knew about her marriage."
+ },
+ {
+  "id": "thursday-murder-club",
+  "title": "The Thursday Murder Club",
+  "author": "Richard Osman",
+  "year": 2020,
+  "pages": 382,
+  "kind": "fiction",
+  "genres": [
+   "mystery"
+  ],
+  "vibes": [
+   "cozy",
+   "funny"
+  ],
+  "colors": [
+   "#e4572e",
+   "#fdf0d5"
+  ],
+  "blurb": "Four retirees in a peaceful village meet weekly to discuss cold cases, until a real murder lands on their doorstep."
+ },
+ {
+  "id": "and-then-there-were-none",
+  "title": "And Then There Were None",
+  "author": "Agatha Christie",
+  "year": 1939,
+  "pages": 272,
+  "kind": "fiction",
+  "genres": [
+   "mystery"
+  ],
+  "vibes": [
+   "thrilling"
+  ],
+  "colors": [
+   "#20262e",
+   "#c9b27c"
+  ],
+  "blurb": "Ten strangers, one island, no way off, and they start dying one by one. Christie's most ingenious puzzle."
+ },
+ {
+  "id": "the-silent-patient",
+  "title": "The Silent Patient",
+  "author": "Alex Michaelides",
+  "year": 2019,
+  "pages": 336,
+  "kind": "fiction",
+  "genres": [
+   "mystery"
+  ],
+  "vibes": [
+   "thrilling",
+   "mindbending"
+  ],
+  "colors": [
+   "#3c4a57",
+   "#d9e2ea"
+  ],
+  "blurb": "A painter shoots her husband and never speaks again. Her therapist is determined to find out why."
+ },
+ {
+  "id": "tomorrow-and-tomorrow",
+  "title": "Tomorrow, and Tomorrow, and Tomorrow",
+  "author": "Gabrielle Zevin",
+  "year": 2022,
+  "pages": 401,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt"
+  ],
+  "colors": [
+   "#ff7a59",
+   "#2b2d6e"
+  ],
+  "blurb": "Two friends build video games together across thirty years of love, rivalry and creative partnership."
+ },
+ {
+  "id": "a-man-called-ove",
+  "title": "A Man Called Ove",
+  "author": "Fredrik Backman",
+  "year": 2012,
+  "pages": 337,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt",
+   "funny",
+   "cozy"
+  ],
+  "colors": [
+   "#3d6f8e",
+   "#f6e7c1"
+  ],
+  "blurb": "The grumpiest man on the street gets an unwanted new neighbour, and a second chance at life."
+ },
+ {
+  "id": "the-alchemist",
+  "title": "The Alchemist",
+  "author": "Paulo Coelho",
+  "year": 1988,
+  "pages": 208,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "inspiring"
+  ],
+  "colors": [
+   "#d98e04",
+   "#2c1b0e"
+  ],
+  "blurb": "A shepherd boy crosses the desert in search of treasure and discovers what it means to follow your dream."
+ },
+ {
+  "id": "the-kite-runner",
+  "title": "The Kite Runner",
+  "author": "Khaled Hosseini",
+  "year": 2003,
+  "pages": 371,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt"
+  ],
+  "colors": [
+   "#2d6a8a",
+   "#f4d35e"
+  ],
+  "blurb": "A story of friendship, betrayal and redemption between two boys in Kabul, and the long road back."
+ },
+ {
+  "id": "the-little-prince",
+  "title": "The Little Prince",
+  "author": "Antoine de Saint-Exupéry",
+  "year": 1943,
+  "pages": 96,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt",
+   "cozy"
+  ],
+  "colors": [
+   "#1a3a6b",
+   "#ffd166"
+  ],
+  "blurb": "A pilot stranded in the desert meets a small prince from a distant asteroid. A tiny book with a giant heart."
+ },
+ {
+  "id": "the-prophet",
+  "title": "The Prophet",
+  "author": "Kahlil Gibran",
+  "year": 1923,
+  "pages": 107,
+  "kind": "fiction",
+  "genres": [
+   "literary"
+  ],
+  "vibes": [
+   "inspiring",
+   "heartfelt"
+  ],
+  "colors": [
+   "#5e3a87",
+   "#f1d7a6"
+  ],
+  "blurb": "Poetic essays on love, work, joy and sorrow, offered by a departing prophet to the people who loved him."
+ },
+ {
+  "id": "pride-and-prejudice",
+  "title": "Pride and Prejudice",
+  "author": "Jane Austen",
+  "year": 1813,
+  "pages": 432,
+  "kind": "fiction",
+  "genres": [
+   "romance",
+   "literary"
+  ],
+  "vibes": [
+   "funny",
+   "cozy"
+  ],
+  "colors": [
+   "#7a2e46",
+   "#f7d6e0"
+  ],
+  "blurb": "Elizabeth Bennet and Mr Darcy misjudge each other spectacularly in the wittiest romance ever written."
+ },
+ {
+  "id": "evelyn-hugo",
+  "title": "The Seven Husbands of Evelyn Hugo",
+  "author": "Taylor Jenkins Reid",
+  "year": 2017,
+  "pages": 389,
+  "kind": "fiction",
+  "genres": [
+   "romance",
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt"
+  ],
+  "colors": [
+   "#0e6b5c",
+   "#f2c6a0"
+  ],
+  "blurb": "A reclusive Hollywood icon finally tells the truth about her glamorous, scandalous life, and the love behind it."
+ },
+ {
+  "id": "sapiens",
+  "title": "Sapiens",
+  "author": "Yuval Noah Harari",
+  "year": 2011,
+  "pages": 443,
+  "kind": "nonfiction",
+  "genres": [
+   "history",
+   "science"
+  ],
+  "vibes": [
+   "mindbending"
+  ],
+  "colors": [
+   "#f3efe6",
+   "#c0392b"
+  ],
+  "blurb": "How a modest ape came to rule the planet: a sweeping history of humankind, from stone tools to algorithms."
+ },
+ {
+  "id": "a-short-history",
+  "title": "A Short History of Nearly Everything",
+  "author": "Bill Bryson",
+  "year": 2003,
+  "pages": 544,
+  "kind": "nonfiction",
+  "genres": [
+   "science"
+  ],
+  "vibes": [
+   "funny",
+   "mindbending"
+  ],
+  "colors": [
+   "#2e86ab",
+   "#f6f5ae"
+  ],
+  "blurb": "From the Big Bang to us, explained with wonder and wit by the most curious traveller there is."
+ },
+ {
+  "id": "the-body",
+  "title": "The Body",
+  "author": "Bill Bryson",
+  "year": 2019,
+  "pages": 450,
+  "kind": "nonfiction",
+  "genres": [
+   "science"
+  ],
+  "vibes": [
+   "funny"
+  ],
+  "colors": [
+   "#c44536",
+   "#fbe8d3"
+  ],
+  "blurb": "A guided tour of the machine you live in, packed with astonishing facts and Bryson's trademark humour."
+ },
+ {
+  "id": "the-gene",
+  "title": "The Gene",
+  "author": "Siddhartha Mukherjee",
+  "year": 2016,
+  "pages": 592,
+  "kind": "nonfiction",
+  "genres": [
+   "science",
+   "history"
+  ],
+  "vibes": [
+   "mindbending",
+   "heartfelt"
+  ],
+  "colors": [
+   "#283d3b",
+   "#83c5be"
+  ],
+  "blurb": "The story of heredity, from Mendel's peas to gene editing, woven with the author's own family history."
+ },
+ {
+  "id": "thinking-fast-and-slow",
+  "title": "Thinking, Fast and Slow",
+  "author": "Daniel Kahneman",
+  "year": 2011,
+  "pages": 499,
+  "kind": "nonfiction",
+  "genres": [
+   "psychology"
+  ],
+  "vibes": [
+   "mindbending"
+  ],
+  "colors": [
+   "#f7f7f2",
+   "#1b4965"
+  ],
+  "blurb": "The two systems that drive how we think, and the surprising, predictable ways they lead us astray."
+ },
+ {
+  "id": "range",
+  "title": "Range",
+  "author": "David Epstein",
+  "year": 2019,
+  "pages": 339,
+  "kind": "nonfiction",
+  "genres": [
+   "psychology",
+   "business"
+  ],
+  "vibes": [
+   "mindbending",
+   "inspiring"
+  ],
+  "colors": [
+   "#ef8354",
+   "#2d3142"
+  ],
+  "blurb": "Why generalists triumph in a specialised world, and why a winding path is often the fastest one."
+ },
+ {
+  "id": "quiet",
+  "title": "Quiet",
+  "author": "Susan Cain",
+  "year": 2012,
+  "pages": 333,
+  "kind": "nonfiction",
+  "genres": [
+   "psychology"
+  ],
+  "vibes": [
+   "inspiring",
+   "heartfelt"
+  ],
+  "colors": [
+   "#e9ecef",
+   "#495057"
+  ],
+  "blurb": "The power of introverts in a world that can't stop talking, and how to make the most of a quiet strength."
+ },
+ {
+  "id": "courage-to-be-disliked",
+  "title": "The Courage to Be Disliked",
+  "author": "Ichiro Kishimi & Fumitake Koga",
+  "year": 2013,
+  "pages": 288,
+  "kind": "nonfiction",
+  "genres": [
+   "psychology",
+   "selfgrowth"
+  ],
+  "vibes": [
+   "mindbending",
+   "inspiring"
+  ],
+  "colors": [
+   "#ffd23f",
+   "#1a1a2e"
+  ],
+  "blurb": "A philosopher and a young man debate their way through Adlerian psychology and the freedom to be yourself."
+ },
+ {
+  "id": "mans-search-for-meaning",
+  "title": "Man's Search for Meaning",
+  "author": "Viktor E. Frankl",
+  "year": 1946,
+  "pages": 165,
+  "kind": "nonfiction",
+  "genres": [
+   "psychology",
+   "biography"
+  ],
+  "vibes": [
+   "inspiring",
+   "heartfelt"
+  ],
+  "colors": [
+   "#3a3a3a",
+   "#e5c07b"
+  ],
+  "blurb": "A psychiatrist's account of surviving the camps, and his insight that meaning can be found in any circumstance."
+ },
+ {
+  "id": "atomic-habits",
+  "title": "Atomic Habits",
+  "author": "James Clear",
+  "year": 2018,
+  "pages": 320,
+  "kind": "nonfiction",
+  "genres": [
+   "selfgrowth"
+  ],
+  "vibes": [
+   "inspiring"
+  ],
+  "colors": [
+   "#f4f1de",
+   "#e07a5f"
+  ],
+  "blurb": "Tiny changes, remarkable results: a practical system for building good habits and breaking bad ones."
+ },
+ {
+  "id": "deep-work",
+  "title": "Deep Work",
+  "author": "Cal Newport",
+  "year": 2016,
+  "pages": 296,
+  "kind": "nonfiction",
+  "genres": [
+   "selfgrowth",
+   "business"
+  ],
+  "vibes": [
+   "inspiring"
+  ],
+  "colors": [
+   "#0b3954",
+   "#bfd7ea"
+  ],
+  "blurb": "Focus is the superpower of the distracted age. Rules for doing your most valuable, undistracted work."
+ },
+ {
+  "id": "ikigai",
+  "title": "Ikigai",
+  "author": "Héctor García & Francesc Miralles",
+  "year": 2016,
+  "pages": 208,
+  "kind": "nonfiction",
+  "genres": [
+   "selfgrowth"
+  ],
+  "vibes": [
+   "cozy",
+   "inspiring"
+  ],
+  "colors": [
+   "#d62828",
+   "#fcefe8"
+  ],
+  "blurb": "Lessons from the long-lived people of Okinawa on finding your reason to get up in the morning."
+ },
+ {
+  "id": "show-your-work",
+  "title": "Show Your Work!",
+  "author": "Austin Kleon",
+  "year": 2014,
+  "pages": 224,
+  "kind": "nonfiction",
+  "genres": [
+   "selfgrowth",
+   "business"
+  ],
+  "vibes": [
+   "inspiring",
+   "funny"
+  ],
+  "colors": [
+   "#111111",
+   "#ffffff"
+  ],
+  "blurb": "Ten ways to share your creativity and get discovered, without being a self-promoting bore."
+ },
+ {
+  "id": "psychology-of-money",
+  "title": "The Psychology of Money",
+  "author": "Morgan Housel",
+  "year": 2020,
+  "pages": 256,
+  "kind": "nonfiction",
+  "genres": [
+   "business",
+   "psychology"
+  ],
+  "vibes": [
+   "inspiring"
+  ],
+  "colors": [
+   "#2a9d8f",
+   "#f1faee"
+  ],
+  "blurb": "Short stories about how people think about money, and why behaviour beats intelligence when it comes to wealth."
+ },
+ {
+  "id": "shoe-dog",
+  "title": "Shoe Dog",
+  "author": "Phil Knight",
+  "year": 2016,
+  "pages": 386,
+  "kind": "nonfiction",
+  "genres": [
+   "biography",
+   "business"
+  ],
+  "vibes": [
+   "inspiring",
+   "thrilling"
+  ],
+  "colors": [
+   "#ff6b35",
+   "#1b1b1b"
+  ],
+  "blurb": "Nike's founder tells the chaotic, near-bankrupt early days of building a brand from the trunk of his car."
+ },
+ {
+  "id": "steve-jobs",
+  "title": "Steve Jobs",
+  "author": "Walter Isaacson",
+  "year": 2011,
+  "pages": 656,
+  "kind": "nonfiction",
+  "genres": [
+   "biography",
+   "business"
+  ],
+  "vibes": [
+   "inspiring"
+  ],
+  "colors": [
+   "#f5f5f5",
+   "#222222"
+  ],
+  "blurb": "The definitive portrait of the restless, brilliant and difficult founder who reshaped six industries."
+ },
+ {
+  "id": "educated",
+  "title": "Educated",
+  "author": "Tara Westover",
+  "year": 2018,
+  "pages": 334,
+  "kind": "nonfiction",
+  "genres": [
+   "biography"
+  ],
+  "vibes": [
+   "heartfelt",
+   "inspiring"
+  ],
+  "colors": [
+   "#d8c3a5",
+   "#3f3d56"
+  ],
+  "blurb": "Raised off the grid with no schooling, a girl teaches herself enough to reach Cambridge, at a profound cost."
+ },
+ {
+  "id": "born-a-crime",
+  "title": "Born a Crime",
+  "author": "Trevor Noah",
+  "year": 2016,
+  "pages": 304,
+  "kind": "nonfiction",
+  "genres": [
+   "biography"
+  ],
+  "vibes": [
+   "funny",
+   "heartfelt"
+  ],
+  "colors": [
+   "#ffbe0b",
+   "#3a0ca3"
+  ],
+  "blurb": "Growing up mixed-race under apartheid, told with the sharp humour and warmth of a born storyteller."
+ },
+ {
+  "id": "the-gruffalo",
+  "title": "The Gruffalo",
+  "author": "Julia Donaldson & Axel Scheffler",
+  "year": 1999,
+  "pages": 32,
+  "kind": "fiction",
+  "genres": [
+   "children"
+  ],
+  "vibes": [
+   "funny",
+   "cozy"
+  ],
+  "colors": [
+   "#3f7d20",
+   "#f4a259"
+  ],
+  "blurb": "A clever mouse outwits the predators of the deep dark wood by inventing a monster, who turns out to be real."
+ },
+ {
+  "id": "where-the-wild-things-are",
+  "title": "Where the Wild Things Are",
+  "author": "Maurice Sendak",
+  "year": 1963,
+  "pages": 48,
+  "kind": "fiction",
+  "genres": [
+   "children"
+  ],
+  "vibes": [
+   "cozy",
+   "heartfelt"
+  ],
+  "colors": [
+   "#e9d8a6",
+   "#005f73"
+  ],
+  "blurb": "Sent to bed without supper, Max sails away to the land of the Wild Things and becomes their king."
+ },
+ {
+  "id": "boy-mole-fox-horse",
+  "title": "The Boy, the Mole, the Fox and the Horse",
+  "author": "Charlie Mackesy",
+  "year": 2019,
+  "pages": 128,
+  "kind": "fiction",
+  "genres": [
+   "children",
+   "literary"
+  ],
+  "vibes": [
+   "heartfelt",
+   "inspiring",
+   "cozy"
+  ],
+  "colors": [
+   "#fbf8f1",
+   "#1d3557"
+  ],
+  "blurb": "Four unlikely friends share gentle wisdom about kindness, courage and asking for help."
+ },
+ {
+  "id": "the-dot",
+  "title": "The Dot",
+  "author": "Peter H. Reynolds",
+  "year": 2003,
+  "pages": 32,
+  "kind": "fiction",
+  "genres": [
+   "children"
+  ],
+  "vibes": [
+   "inspiring",
+   "heartfelt"
+  ],
+  "colors": [
+   "#ffffff",
+   "#e63946"
+  ],
+  "blurb": "Vashti is sure she can't draw, until her teacher asks her to make a mark and see where it takes her. A small book about being brave."
+ }
+]
