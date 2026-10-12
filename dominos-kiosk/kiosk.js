@@ -40,6 +40,13 @@
       reach: 'Accessible view', reachP: 'Everything is now within reach in the lower half of the screen.', reachOff: 'Exit accessible view',
       sizes: { S: 'Small', M: 'Medium', L: 'Large' }, toast: n => `${n} added`, veg: 'Veg', hot: 'Spicy', best: 'Bestseller', newT: 'New',
       dineShort: 'Eat in', takeShort: 'Take away', qty: 'Qty',
+      kcalUnit: 'kcal', kcalSlice: k => `${k} kcal / slice`, kcalEach: k => `${k} kcal`, kcalWhole: k => `${k} kcal whole pizza`,
+      energyTotal: 'Energy, whole order', kcalAdult: 'Adults need around 2,000 kcal a day.',
+      contains: 'Contains', may: 'May contain', noAllergens: 'No major allergens',
+      nutrition: 'Nutrition', perSlice: 'per slice, Medium', perServing: 'per serving',
+      nut: ['Energy', 'Protein', 'Carbs', 'Sugars', 'Fat', 'Salt'],
+      avIn: m => `Available · ready in ${m} min`, avNow: 'Available · ready now', avLow: n => `Only ${n} left today`,
+      avOut: 'Sold out today · back tomorrow', avLater: h => `Available from ${h}`, soldOut: 'Sold out', fromTime: h => `From ${h}`,
     },
     ar: {
       hero: 'ساخنة. طازجة.<br><em>محضّرة لك.</em>', heroSub: 'اطلب من هنا وتجاوز الطابور — جاهزة خلال ١٥ دقيقة تقريباً.',
@@ -73,6 +80,13 @@
       reach: 'وضع سهولة الوصول', reachP: 'كل شيء الآن في متناولك في النصف السفلي من الشاشة.', reachOff: 'الخروج من وضع سهولة الوصول',
       sizes: { S: 'صغير', M: 'وسط', L: 'كبير' }, toast: n => `تمت إضافة ${n}`, veg: 'نباتي', hot: 'حار', best: 'الأكثر طلباً', newT: 'جديد',
       dineShort: 'في المطعم', takeShort: 'سفري', qty: 'الكمية',
+      kcalUnit: 'سعرة', kcalSlice: k => `${k} سعرة / شريحة`, kcalEach: k => `${k} سعرة`, kcalWhole: k => `${k} سعرة للبيتزا كاملة`,
+      energyTotal: 'الطاقة، الطلب كاملاً', kcalAdult: 'يحتاج البالغ إلى نحو ٢٠٠٠ سعرة حرارية يومياً.',
+      contains: 'يحتوي على', may: 'قد يحتوي على', noAllergens: 'خالٍ من مسببات الحساسية الرئيسية',
+      nutrition: 'القيم الغذائية', perSlice: 'للشريحة، حجم وسط', perServing: 'للحصة',
+      nut: ['الطاقة', 'بروتين', 'كربوهيدرات', 'سكريات', 'دهون', 'ملح'],
+      avIn: m => `متوفر · جاهز خلال ${m} دقيقة`, avNow: 'متوفر · جاهز الآن', avLow: n => `متبقٍ ${n} فقط اليوم`,
+      avOut: 'نفد اليوم · يعود غداً', avLater: h => `متوفر من الساعة ${h}`, soldOut: 'نفد', fromTime: h => `من ${h}`,
     },
   };
 
@@ -129,6 +143,55 @@
       en: ['Mineral Water', '500 ml'], ar: ['مياه معدنية', '٥٠٠ مل'] },
   ];
   const BY_ID = Object.fromEntries(MENU.map(p => [p.id, p]));
+
+  // Indicative nutrition: [kcal, protein g, carbs g, sugars g, fat g, salt g].
+  // Pizzas are per Medium hand-tossed slice; everything else is per serving.
+  const NUT = {
+    margherita: [185, 8.2, 22, 2.1, 7.0, 0.9], pepperoni: [215, 9.4, 22, 2.0, 9.8, 1.2], veggie: [180, 7.4, 23, 2.6, 6.4, 0.9],
+    chickenbbq: [205, 10.8, 25, 4.6, 6.9, 1.1], tikka: [200, 11.2, 23, 2.5, 7.1, 1.1], passion: [245, 11.0, 22, 2.0, 12.5, 1.4],
+    extravaganzza: [255, 12.1, 23, 2.6, 12.8, 1.5],
+    solo: [1720, 72, 210, 48, 62, 9.8], mixmatch: [3610, 168, 400, 40, 150, 20], duo: [3040, 132, 360, 34, 118, 16],
+    garlic: [420, 11, 52, 3.2, 18, 1.7], cheesy: [560, 21, 54, 3.4, 28, 2.2], wedges: [330, 5.2, 46, 1.0, 14, 1.3],
+    wings: [480, 38, 6, 3.8, 34, 3.1], kickers: [410, 30, 26, 0.8, 20, 2.0],
+    lava: [350, 4.6, 44, 31, 17, 0.3], brownie: [410, 5.0, 52, 36, 20, 0.3],
+    cola: [210, 0, 53, 53, 0, 0.05], lemon: [200, 0, 50, 50, 0, 0.1], orange: [230, 0, 58, 57, 0, 0.1], water: [0, 0, 0, 0, 0, 0],
+  };
+
+  // Allergens: c = contains, m = may contain (cross-contact).
+  const ALG_NAME = {
+    gluten: { en: 'Gluten', ar: 'غلوتين' }, milk: { en: 'Milk', ar: 'حليب' }, egg: { en: 'Egg', ar: 'بيض' }, soy: { en: 'Soy', ar: 'صويا' },
+    mustard: { en: 'Mustard', ar: 'خردل' }, sesame: { en: 'Sesame', ar: 'سمسم' }, nuts: { en: 'Tree nuts', ar: 'مكسرات' }, celery: { en: 'Celery', ar: 'كرفس' },
+  };
+  const ALG_PIZZA = { c: ['gluten', 'milk'], m: ['soy', 'egg', 'sesame'] };
+  const ALG_MEAT = { c: ['gluten', 'milk', 'mustard'], m: ['soy', 'egg', 'sesame'] };
+  const ALG = {
+    margherita: ALG_PIZZA, veggie: ALG_PIZZA, pepperoni: ALG_MEAT, tikka: ALG_MEAT, passion: ALG_MEAT,
+    chickenbbq: { c: ['gluten', 'milk', 'soy', 'mustard'], m: ['egg', 'sesame'] },
+    extravaganzza: { c: ['gluten', 'milk', 'soy', 'mustard'], m: ['egg', 'sesame'] },
+    solo: { c: ['gluten', 'milk'], m: ['soy', 'egg', 'sesame'] },
+    mixmatch: { c: ['gluten', 'milk', 'soy', 'mustard', 'celery'], m: ['egg', 'sesame'] },
+    duo: { c: ['gluten', 'milk', 'mustard'], m: ['soy', 'egg', 'sesame'] },
+    garlic: { c: ['gluten', 'milk'], m: ['soy', 'sesame'] }, cheesy: { c: ['gluten', 'milk'], m: ['soy', 'sesame'] },
+    wedges: { c: [], m: ['gluten'] }, wings: { c: ['milk', 'soy', 'mustard', 'celery'], m: ['gluten'] },
+    kickers: { c: ['gluten', 'egg', 'milk', 'soy'], m: ['mustard'] },
+    lava: { c: ['gluten', 'milk', 'egg', 'soy'], m: ['nuts'] }, brownie: { c: ['gluten', 'milk', 'egg', 'soy'], m: ['nuts'] },
+  };
+
+  // Live availability from the store POS (example states). Anything not listed is in stock.
+  const AVAIL = { wings: { s: 'low', left: 5 }, kickers: { s: 'later', at: '11:00' }, brownie: { s: 'out' } };
+  const READY = { pizza: '12–15', deals: '12–15', sides: '8', desserts: '5', drinks: 0 };
+  // Calories scale with size and crust; Small is 6 slices, Medium and Large are 8.
+  const SLICES = { S: 6, M: 8, L: 8 };
+  const SLICE_F = { S: .74, M: 1, L: 1.4 };
+  const CRUST_F = { hand: 1, thin: .82, pan: 1.14, cheesy: 1.22 };
+  const EXTRA_KCAL = 14; // per extra topping, per Medium slice
+  function sliceKcal(item) {
+    return (NUT[item.pid][0] * CRUST_F[item.crust] + item.extras.length * EXTRA_KCAL) * SLICE_F[item.size];
+  }
+  const lineKcal = it => BY_ID[it.pid].cat === 'pizza' ? sliceKcal(it) * SLICES[it.size] * it.qty : NUT[it.pid][0] * it.qty;
+  const avail = id => AVAIL[id] || { s: 'in' };
+  const isOff = id => ['out', 'later'].includes(avail(id).s);
+  const maxQty = id => avail(id).left || 20;
   const CATS = ['pizza', 'deals', 'sides', 'desserts', 'drinks'];
   const CAT_ART = { pizza: 'pizza', deals: 'combo', sides: 'sticks', desserts: 'lava', drinks: 'cup' };
 
@@ -202,6 +265,15 @@
     receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/>', down: '<path d="M12 4v16M5 13l7 7 7-7"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', oven: '<rect x="3" y="4" width="18" height="16" rx="2"/><rect x="6" y="9" width="12" height="8" rx="1"/><path d="M7 6.5h1M10 6.5h1"/>',
     star: '<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/>',
+    a_gluten: '<path d="M12 21V8"/><path d="M12 8C9.8 8 8.5 6.6 8.5 4.5 10.7 4.5 12 5.9 12 8zm0 0c2.2 0 3.5-1.4 3.5-3.5C13.3 4.5 12 5.9 12 8zm0 5c-2.2 0-3.5-1.4-3.5-3.5 2.2 0 3.5 1.4 3.5 3.5zm0 0c2.2 0 3.5-1.4 3.5-3.5-2.2 0-3.5 1.4-3.5 3.5zm0 5c-2.2 0-3.5-1.4-3.5-3.5 2.2 0 3.5 1.4 3.5 3.5zm0 0c2.2 0 3.5-1.4 3.5-3.5-2.2 0-3.5 1.4-3.5 3.5z"/>',
+    a_milk: '<path d="M9 3h6v3l2 3v11a1 1 0 01-1 1H8a1 1 0 01-1-1V9l2-3z"/><path d="M7 12h10"/>',
+    a_egg: '<path d="M12 3c3.5 0 6 6 6 10a6 6 0 01-12 0c0-4 2.5-10 6-10z"/>',
+    a_soy: '<path d="M6.5 18.5C4 15 7 6 13.5 4.5c4-.6 5.5 2.6 3.4 5.8-1.6 2.4-4 3-5.5 5.5s-2.9 5.6-4.9 2.7z"/><circle cx="13" cy="8.6" r="1.4"/><circle cx="9.6" cy="13.6" r="1.4"/>',
+    a_mustard: '<path d="M9.5 3h5v3h-5z"/><path d="M8 6h8l1 3v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9z"/><path d="M7 13h10"/>',
+    a_sesame: '<ellipse cx="8" cy="9" rx="2" ry="3.2" transform="rotate(-25 8 9)"/><ellipse cx="15.5" cy="8" rx="2" ry="3.2" transform="rotate(20 15.5 8)"/><ellipse cx="12" cy="16" rx="2" ry="3.2"/>',
+    a_nuts: '<path d="M5 10c0-3 3-5 7-5s7 2 7 5z"/><path d="M6 10c0 6 3 10 6 10s6-4 6-10M12 5V3"/>',
+    a_celery: '<path d="M8 21c0-6 1-11 4-16M12 21V5M16 21c0-6-1-11-4-16"/><path d="M10 5C8.5 4.2 7.5 3.2 7.2 2M14 5c1.5-.8 2.5-1.8 2.8-3"/>',
     flame: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 01-10 0c0-2.5 1.5-4 2.5-5 .3 2 1.3 3 2.5 3-1-3 0-6 0-8z"/>',
   };
   const ic = (n, s = 40, w = 2.4, cls = '') => `<svg class="${cls}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
@@ -334,6 +406,36 @@
     p.hot && `<span class="tag hot">${ic('flame', 20, 2.6)}${T(S).hot}</span>`,
   ].filter(Boolean).join('');
 
+  const fmtG = (v, S) => (v >= 10 || v === 0 ? Math.round(v) : v.toFixed(1)) + (S.lang === 'ar' ? ' غ' : 'g');
+  const fmtK = v => Math.round(v).toLocaleString('en-US');
+
+  function allergenRow(p, S) {
+    const t = T(S), a = ALG[p.id];
+    if (!a || (!a.c.length && !a.m.length)) return `<div class="alg"><span class="free">${ic('check', 26, 3)}${t.noAllergens}</span></div>`;
+    const chip = (k, cls) => `<span class="${cls}">${ic('a_' + k, 28, 1.9)}${ALG_NAME[k][S.lang]}</span>`;
+    return `<div class="alg">${a.c.length ? `<div class="grp"><span class="lbl">${t.contains}</span>${a.c.map(k => chip(k, 'ac')).join('')}</div>` : ''}
+      ${a.m.length ? `<div class="grp"><span class="lbl">${t.may}</span>${a.m.map(k => chip(k, 'am')).join('')}</div>` : ''}</div>`;
+  }
+
+  function nutStrip(p, S) {
+    const t = T(S), n = NUT[p.id];
+    const cells = n.map((v, i) => i === 0
+      ? `<div class="ncell kc"><b class="num">${fmtK(v)}</b><span>${t.kcalUnit}</span></div>`
+      : `<div class="ncell"><b class="num">${fmtG(v, S)}</b><span>${t.nut[i]}</span></div>`).join('');
+    return `<div class="nut"><div class="nb">${t.nutrition} · ${p.cat === 'pizza' ? t.perSlice : t.perServing}</div><div class="nrow">${cells}</div></div>`;
+  }
+
+  function availChip(p, S) {
+    const t = T(S), a = avail(p.id);
+    const [cls, icon, text] = {
+      in: ['in', 'check', READY[p.cat] ? t.avIn(READY[p.cat]) : t.avNow],
+      low: ['low', 'clock', t.avLow(a.left)],
+      out: ['out', 'x', t.avOut],
+      later: ['out', 'clock', t.avLater(a.at)],
+    }[a.s];
+    return `<span class="av av-${cls}">${ic(icon, 26, 3)}${text}</span>`;
+  }
+
   const a11yBtn = (S, cls = 'ib') => `<button class="${cls} ${S.reach ? 'on' : ''}" data-a="a11y" aria-label="Accessible view">${ic('access', 44)}</button>`;
   const langBtn = S => `<button class="pill" data-a="lang" data-v="${S.lang === 'en' ? 'ar' : 'en'}">${ic('globe', 34)}${S.lang === 'en' ? 'العربية' : 'English'}</button>`;
 
@@ -387,16 +489,19 @@
       const t = T(S), tot = totals(S);
       const list = MENU.filter(p => p.cat === S.cat);
       const cards = list.map(p => {
-        const q = qtyOf(S, p.id), isPizza = p.cat === 'pizza';
+        const q = qtyOf(S, p.id), isPizza = p.cat === 'pizza', a = avail(p.id), off = isOff(p.id);
         const price = isPizza ? `<span class="price"><small>${t.from}</small>${aed(sizePrice(p, 'S'), S)}</span>` : `<span class="price">${aed(p.price, S)}</span>`;
-        const action = isPizza || q === 0
-          ? `<button class="addbtn" data-a="${isPizza ? 'open' : 'add'}" data-v="${p.id}">${ic('plus', 30, 3.2)}${t.add}</button>`
-          : stepper(`mdec:${p.id}`, `minc:${p.id}`, q);
-        return `<article class="pc ${q ? 'in' : ''}" ${isPizza ? `data-a="open" data-v="${p.id}"` : ''}>
+        let action;
+        if (off) action = `<span class="addbtn dis">${a.s === 'out' ? t.soldOut : t.fromTime(a.at)}</span>`;
+        else if (isPizza || q === 0) action = `<button class="addbtn" data-a="${isPizza ? 'open' : 'add'}" data-v="${p.id}">${ic('plus', 30, 3.2)}${t.add}</button>`;
+        else action = stepper(`mdec:${p.id}`, `minc:${p.id}`, q);
+        return `<article class="mi ${q ? 'in' : ''} ${off ? 'off' : ''}" ${isPizza && !off ? `data-a="open" data-v="${p.id}"` : ''}>
           ${q ? `<span class="count num">${q}</span>` : ''}
-          <div class="img">${art(p)}<div class="tags">${tagsFor(p, S)}</div></div>
-          <h3>${esc(name(p, S))}</h3><p class="d">${esc(desc(p, S))}</p>
-          <div class="row">${price}${action}</div></article>`;
+          <div class="top"><div class="img">${art(p)}</div>
+            <div class="mc"><div class="mt"><h3>${esc(name(p, S))}</h3><div class="tags">${tagsFor(p, S)}</div></div>
+              <p class="d">${esc(desc(p, S))}</p>${availChip(p, S)}
+              <div class="row"><div class="pk">${price}<span class="kb">${ic('flame', 24, 2.6)}${isPizza ? t.kcalSlice(NUT[p.id][0]) : t.kcalEach(NUT[p.id][0])}</span></div>${action}</div></div></div>
+          <div class="facts">${allergenRow(p, S)}${nutStrip(p, S)}</div></article>`;
       }).join('');
       return `<div class="k menu" dir="${S.lang === 'ar' ? 'rtl' : 'ltr'}">
         <header class="kh">${logo(78)}<div class="grow"></div>
@@ -406,7 +511,7 @@
           <button class="btn btn-white" data-a="cat" data-v="deals">${t.promoBtn}</button>${pizza(['pepperoni', 'pepper'], 'promo')}</div>
         <div class="mbody">
           <nav class="rail" data-sk="rail">${CATS.map(c => `<button class="${S.cat === c ? 'on' : ''}" data-a="cat" data-v="${c}"><span class="ri">${c === 'pizza' ? pizza(['pepperoni'], 'rail') : art(MENU.find(p => p.art === CAT_ART[c] || (c === 'drinks' && p.cat === 'drinks')))}</span>${t.cats[c]}</button>`).join('')}</nav>
-          <section class="items" data-sk="items-${S.cat}"><h2 class="disp">${t.cats[S.cat]}<small>${t.itemsCount(list.length)}</small></h2><div class="cards">${cards}</div></section>
+          <section class="items" data-sk="items-${S.cat}"><h2 class="disp">${t.cats[S.cat]}<small>${t.itemsCount(list.length)}</small></h2><div class="list">${cards}</div></section>
         </div>
         <footer class="cartbar">
           <div class="bag">${ic('bag', 56, 2.2)}${tot.count ? `<b class="num">${tot.count}</b>` : ''}</div>
@@ -422,11 +527,12 @@
       const extrasAllowed = TOPPINGS.filter(tp => !(p.veg && ['pepperoni', 'chicken', 'sausage'].includes(tp.id)));
       return `<div class="k custom" dir="${S.lang === 'ar' ? 'rtl' : 'ltr'}">${header(S, { backTo: c.editIdx != null ? 'cart' : 'menu', title: t.customise })}
         <div class="chero"><div class="pzbox">${pizza([...p.tops, ...c.extras], p.id, `style="transform:scale(${scale})"`)}</div>
-          <div><div class="tags">${tagsFor(p, S)}</div><h2 class="disp">${esc(name(p, S))}</h2><p>${esc(desc(p, S))}</p></div></div>
+          <div><div class="tags">${tagsFor(p, S)}</div><h2 class="disp">${esc(name(p, S))}</h2><p>${esc(desc(p, S))}</p>
+            <div class="hk">${ic('flame', 36, 2.4)}<div><b class="num">${t.kcalSlice(fmtK(sliceKcal(item)))}</b><span class="num">${t.kcalWhole(fmtK(sliceKcal(item) * SLICES[c.size]))}</span></div></div></div></div>
         <div class="cpanel" data-sk="cpanel">
           <section><h3 class="disp">${t.size}</h3><div class="opts c3">${['S', 'M', 'L'].map((z, i) => `
             <button class="opt size ${c.size === z ? 'on' : ''}" data-a="size" data-v="${z}"><span class="ck">${ic('check', 28, 3.4)}</span>
-              <i style="width:${SIZES[z].ring}px;height:${SIZES[z].ring}px;margin:${(122 - SIZES[z].ring) / 2}px 0 ${(122 - SIZES[z].ring) / 2 + 10}px"></i><b>${t.sizes[z]}</b><span>${t.serves[i]}</span><em class="num">${aed(sizePrice(p, z), S)}</em></button>`).join('')}</div></section>
+              <i style="width:${SIZES[z].ring}px;height:${SIZES[z].ring}px;margin:${(122 - SIZES[z].ring) / 2}px 0 ${(122 - SIZES[z].ring) / 2 + 10}px"></i><b>${t.sizes[z]}</b><span>${t.serves[i]}</span><span class="sk">${t.kcalSlice(fmtK(sliceKcal({ ...item, size: z })))}</span><em class="num">${aed(sizePrice(p, z), S)}</em></button>`).join('')}</div></section>
           <section><h3 class="disp">${t.crust}</h3><div class="opts c2">${CRUSTS.map(cr => `
             <button class="opt ${c.crust === cr.id ? 'on' : ''}" data-a="crust" data-v="${cr.id}"><span class="ck">${ic('check', 28, 3.4)}</span>
               <b>${cr[S.lang][0]}</b><span>${cr[S.lang][1]}</span><em class="num">${cr.add ? `+ ${aed(cr.add, S)}` : '&nbsp;'}</em></button>`).join('')}</div></section>
@@ -448,10 +554,11 @@
           if (it.extras.length) meta += `<span>+ ${it.extras.map(e => TOP_NAME[e][S.lang]).join(S.lang === 'ar' ? '، ' : ', ')}</span>`;
           meta += `<button class="edit" data-a="edit" data-v="${i}">${ic('edit', 28, 2.6)}${t.edit}</button>`;
         } else meta = `<span>${esc(desc(p, S))}</span>`;
+        meta = meta.replace('</span>', ` · ${p.cat === 'pizza' ? t.kcalWhole(fmtK(lineKcal({ ...it, qty: 1 }))) : t.kcalEach(fmtK(NUT[it.pid][0]))}</span>`);
         return `<div class="line"><div class="th">${art(p)}</div><div class="info"><b>${esc(name(p, S))}</b>${meta}</div>
           ${stepper(`dec:${i}`, `inc:${i}`, it.qty)}<div class="lp num">${aed(unitPrice(it) * it.qty, S)}</div></div>`;
       }).join('');
-      const ups = ['wings', 'lava', 'cola', 'garlic', 'wedges'].filter(id => !qtyOf(S, id) || S.upsold.includes(id)).slice(0, 3);
+      const ups = ['wings', 'lava', 'cola', 'garlic', 'wedges'].filter(id => !isOff(id) && (!qtyOf(S, id) || S.upsold.includes(id))).slice(0, 3);
       return `<div class="k cart" dir="${S.lang === 'ar' ? 'rtl' : 'ltr'}">${header(S, { backTo: 'menu', title: t.yourOrder })}
         <div class="cbody" data-sk="cart">
           <div class="ctype">${ic(S.type === 'take' ? 'bag' : 'dine', 36)}${t.orderFor}: <b>${S.type === 'take' ? t.takeShort : t.dineShort}</b>
@@ -468,6 +575,7 @@
           <div class="totals"><div><span>${t.subtotal}</span><span class="num">${aed(tot.sub, S)}</span></div>
             ${tot.disc ? `<div class="disc"><span>${t.discount}</span><span class="num">− ${aed(tot.disc, S)}</span></div>` : ''}
             <div><span>${t.vat}</span><span class="num">${aed(tot.vat, S)}</span></div>
+            <div class="energy"><span>${ic('flame', 28, 2.4)}${t.energyTotal}</span><span class="num">${fmtK(S.cart.reduce((a, it) => a + lineKcal(it), 0))} kcal</span></div>
             <div class="grand"><span>${t.total}</span><span class="num">${aed(tot.total, S)}</span></div></div>
         </div>
         <footer class="cfoot"><button class="btn btn-ghost" style="flex:0 0 auto" data-a="go" data-v="menu">${ic('plus', 36, 3)}${t.addMore}</button>
@@ -552,6 +660,8 @@
     { key: 'otype', title: 'Eat in or take away', note: 'One question per screen with two large cards. Packaging and tax rules follow this choice.', s: () => Object.assign(fresh(), { screen: 'otype' }) },
     { key: 'menu-empty', title: 'Menu · empty order', note: 'Category rail on the left, two-column cards, a deal banner and an order bar that stays put. Review stays disabled until something is added.', s: () => Object.assign(fresh(), { screen: 'menu' }) },
     { key: 'menu', title: 'Menu · items added', note: 'Items already in the order get a red outline and a count. Sides and drinks switch to an inline stepper, so no extra screen is needed.', s: () => demo({ screen: 'menu', cat: 'sides' }) },
+    { key: 'menu-stock', title: 'Menu · stock states', note: 'Low stock shows the count left and caps the quantity. Sold-out and not-yet-served items stay listed with their details, greyed out and without an Add button.', s: () => demo({ screen: 'menu', cat: 'sides', cart: [] }) },
+    { key: 'menu-ar', title: 'Menu · Arabic', note: 'The same listing in Arabic: allergen names, nutrition labels and availability are all translated.', s: () => demo({ screen: 'menu', lang: 'ar', cat: 'pizza' }) },
     { key: 'custom', title: 'Build your pizza', note: 'Live preview: toppings appear on the pizza and it grows with the size. The price updates in the button.', s: () => demo({ screen: 'custom', custom: { pid: 'tikka', size: 'L', crust: 'cheesy', extras: ['jalapeno', 'mushroom'], qty: 1, editIdx: null } }) },
     { key: 'cart', title: 'Review order', note: 'Edit or change quantity on each line. A one-tap add-on row raises order value. Coupons can be scanned with the hardware scanner. VAT is shown as included.', s: () => demo({ screen: 'cart', coupon: true }) },
     { key: 'pay', title: 'Payment · choose', note: 'Two clear choices: tap to pay with a card or phone, or pay at the counter. The total stays big and on screen.', s: () => demo({ screen: 'pay', coupon: true }) },
@@ -565,7 +675,7 @@
   const NOTES = {
     attract: ['Readable from 3 m away: 150 px headline, a 180 px tall call to action and a pulsing ring.', 'Tap anywhere to start. Language buttons sit top right and the accessibility button bottom left.', 'Payment methods in the footer answer “do they take cards?” before the guest walks over.'],
     otype: ['One decision per screen, with 560 px tall cards.', 'The choice changes packaging and can be edited later from the menu header or order review.'],
-    menu: ['Touch targets are at least 80 px (the guideline minimum is 44 pt).', 'Pizzas open the builder. Sides, desserts and drinks add inline with a stepper.', 'The order bar stays fixed. Review stays disabled until the order has an item.', 'The deal banner links to the Deals category; the offer is pulled live from the store.'],
+    menu: ['Each listing shows picture, name, tags, description, price, live availability, allergens and nutrition, so guests can decide without opening anything.', 'Allergens use an icon and a word: solid chips for “Contains”, dashed for “May contain”. Never colour alone.', 'Calories lead the nutrition strip, as Dubai Municipality requires on menus. Pizzas are per Medium slice, everything else per serving.', 'Availability comes live from the POS: in stock with a ready time, low stock with a count, sold out, or a start time. Unavailable items stay visible but can’t be added.', 'Touch targets are at least 80 px (the guideline minimum is 44 pt).', 'Pizzas open the builder. Sides, desserts and drinks add inline with a stepper.', 'The order bar stays fixed. Review stays disabled until the order has an item.', 'The deal banner links to the Deals category; the offer is pulled live from the store.'],
     custom: ['Toppings appear on the preview as they are picked, and size scales the pizza.', 'Meat toppings are hidden on vegetarian pizzas.', 'The price in the button always shows the live total for the item.'],
     cart: ['Each line can be edited, changed in quantity or removed (minus at 1 becomes a bin).', 'The add-on row hides anything already in the order.', 'UAE prices include VAT, so VAT is shown as part of the total, not added on top.'],
     pay: ['Card terminal integration: Visa, Mastercard, Apple Pay and Google Pay over NFC.', 'An arrow points to the physical reader. The screen moves on by itself when payment confirms.', 'Pay at counter prints a ticket and holds the order until it is paid.'],
@@ -632,9 +742,9 @@
       case 'open': S.custom = { pid: arg, size: 'M', crust: 'hand', extras: [], qty: 1, editIdx: null }; go('custom'); break;
       case 'add': S.cart.push({ pid: arg, qty: 1 }); toast(t.toast(name(BY_ID[arg], S))); break;
       case 'upsell': S.cart.push({ pid: arg, qty: 1 }); S.upsold.push(arg); toast(t.toast(name(BY_ID[arg], S))); break;
-      case 'minc': { const it = S.cart.find(i => i.pid === arg); it.qty++; break; }
+      case 'minc': { const it = S.cart.find(i => i.pid === arg); if (qtyOf(S, arg) < maxQty(arg)) it.qty++; break; }
       case 'mdec': { const i = S.cart.findIndex(x => x.pid === arg); if (--S.cart[i].qty <= 0) S.cart.splice(i, 1); break; }
-      case 'inc': S.cart[+arg].qty++; break;
+      case 'inc': { const it = S.cart[+arg]; if (qtyOf(S, it.pid) < maxQty(it.pid)) it.qty++; break; }
       case 'dec': if (--S.cart[+arg].qty <= 0) S.cart.splice(+arg, 1); if (!S.cart.length) go('menu'); break;
       case 'edit': { const it = S.cart[+arg]; S.custom = { pid: it.pid, size: it.size, crust: it.crust, extras: [...it.extras], qty: it.qty, editIdx: +arg }; go('custom'); break; }
       case 'size': S.custom.size = arg; break;
