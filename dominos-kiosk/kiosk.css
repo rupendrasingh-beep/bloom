@@ -17,6 +17,7 @@
   --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
   --body: 'Inter', system-ui, -apple-system, sans-serif;
   --arabic: 'Cairo', 'Geeza Pro', 'Segoe UI', sans-serif;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -32,7 +33,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ---------- Viewer chrome ---------- */
 
 .bar {
-  position: sticky; top: 0; z-index: 20;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
   height: 64px; display: flex; align-items: center; gap: 16px;
   padding: 0 20px; background: #16191D; border-bottom: 1px solid #2A3037;
 }
@@ -75,7 +76,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .scanner i { width: 74px; height: 74px; border-radius: 14px; background: radial-gradient(circle, #FF5468 0, #8A0F20 70%); opacity: .8; animation: scan 2.4s ease-in-out infinite; }
 @keyframes scan { 50% { opacity: .35; } }
 
-.side { width: 340px; flex: none; position: sticky; top: 88px; display: flex; flex-direction: column; gap: 24px; }
+.side { width: 340px; flex: none; position: sticky; top: calc(88px + env(safe-area-inset-top, 0px)); display: flex; flex-direction: column; gap: 24px; }
 .side h4 { margin: 0 0 10px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #8C98A3; }
 .flow { display: flex; flex-direction: column; gap: 2px; }
 .flow button { text-align: left; padding: 9px 12px; border-radius: 8px; font-size: 14px; color: #C3CCD4; display: flex; gap: 10px; }
