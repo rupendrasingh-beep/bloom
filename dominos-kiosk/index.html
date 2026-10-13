@@ -20,6 +20,7 @@
     <div class="tabs" role="tablist">
       <button data-tab="proto" class="on">Prototype</button>
       <button data-tab="board">All screens</button>
+      <button data-tab="features">Features</button>
     </div>
     <button class="ghost" id="restart">Restart</button>
   </div>
@@ -38,16 +39,25 @@
     <aside class="side">
       <div><h4>Flow</h4><div class="flow" id="flow"></div></div>
       <div><h4>Design notes</h4><div class="notes" id="notes"></div></div>
-      <p class="hint">Click through the screen as a guest would. Leave it untouched for 45 seconds to see the timeout prompt. Prices are placeholders; real prices come from the store’s POS.</p>
+      <p class="hint">Click through the screen as a guest would. Leave it untouched for 45 seconds to see the timeout prompt. The demo sign-in code is 1234. Prices, nutrition, stock, wallet and coupons are placeholders.</p>
     </aside>
   </main>
 
   <main class="view board" data-view="board">
     <header>
       <h1>All screens</h1>
-      <p>Fourteen key states of the guest journey, from the attract loop to the order number, plus stock states, Arabic, timeout and accessible views. Click a screen to open it in the prototype.</p>
+      <p>Every key state of the guest journey, from the welcome screen to the order number: configuration, deals, sign-in, wallet and coupon states, Arabic, timeout and accessible views. Click a screen to open it in the prototype.</p>
     </header>
     <div class="grid" id="grid"></div>
+  </main>
+
+  <main class="view features" data-view="features">
+    <header>
+      <h1>Feature coverage</h1>
+      <p>Each sub-feature from the brief, with the screens that show it. Click a screen name to open it in the prototype.</p>
+      <span class="count" id="cov-count"></span>
+    </header>
+    <div id="cov"></div>
   </main>
 
   <script src="kiosk.js"></script>
