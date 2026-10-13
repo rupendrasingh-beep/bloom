@@ -9,98 +9,79 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/site.css?v=1">
+<link rel="stylesheet" href="styles/site.css?v=2">
 </head>
 <body>
 
-<!-- Header (12:550 logo, 12:502 nav) -->
-<header class="site-header" data-header>
-  <a class="brand" href="#top" aria-label="Rayyan home">
-    <img src="assets/logo.png" alt="Rayyan" width="135" height="99">
-  </a>
-  <nav class="nav" aria-label="Main">
-    <img class="nav__pill" src="assets/nav-pill.svg" alt="" width="600" height="80">
-    <span class="nav__glow" aria-hidden="true"></span>
-    <ul class="nav__list">
-      <li><a href="#story" class="is-active">About Rayyan</a></li>
-      <li><a href="#bottling">Our Products</a></li>
-      <li><a href="#source">Sustainability</a></li>
-      <li><a href="#mission">What’s happening</a></li>
-    </ul>
-  </nav>
-  <div class="header-tools">
-    <button class="lang" type="button" aria-label="Language: English">
-      <img src="assets/icon-global.svg" alt="" width="18" height="18">
-      <span>EN</span>
-      <img class="lang__caret" src="assets/icon-caret.svg" alt="" width="7" height="4">
-    </button>
-    <div class="icon-btns">
-      <button class="icon-btn" type="button" aria-label="Account">
-        <img src="assets/icon-user.svg" alt="" width="12" height="15">
-      </button>
-      <button class="icon-btn icon-btn--bag" type="button" aria-label="Basket">
-        <span class="bag" aria-hidden="true">
-          <img class="bag__1" src="assets/icon-bag-1.svg" alt="">
-          <img class="bag__2" src="assets/icon-bag-2.svg" alt="">
-          <img class="bag__3" src="assets/icon-bag-3.svg" alt="">
-          <img class="bag__4" src="assets/icon-bag-4.svg" alt="">
-        </span>
-      </button>
-    </div>
-    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
-      <span></span><span></span>
-    </button>
-  </div>
-</header>
-
 <main id="top">
 
-  <!-- Fold 01 — video intro (3:1512) -->
+  <!-- Fold 01 — video intro (5186:32177) -->
   <section class="hero" aria-label="Introduction">
     <div class="hero__media" data-hero-media>
-      <canvas class="hero__bubbles" data-bubbles aria-hidden="true"></canvas>
-      <video class="hero__video" data-hero-video autoplay muted loop playsinline preload="auto">
+      <video class="hero__video" data-hero-video autoplay muted loop playsinline preload="auto" poster="assets/hero.jpg">
         <source src="assets/hero.mp4" type="video/mp4">
       </video>
+      <canvas class="hero__bubbles" data-bubbles aria-hidden="true"></canvas>
     </div>
-    <div class="hero__shade" aria-hidden="true"></div>
     <a class="scroll-cue" href="#story" aria-label="Scroll to the Rayyan story">
       <img src="assets/scroll-down.png" alt="" width="45" height="45">
     </a>
   </section>
 
-  <!-- Water ripple that follows the pointer behind every fold after the hero (3:1397 Bg_Ripple) -->
+  <!-- Navigation bar under the hero; sticks to the top once reached (5186:32180) -->
+  <header class="navbar" data-navbar>
+    <button class="lang" type="button" aria-label="Language: English">
+      <img src="assets/icon-global.png" alt="" width="18" height="19">
+      <span>EN</span>
+      <img class="lang__caret" src="assets/icon-caret.png" alt="" width="9" height="7">
+    </button>
+    <nav class="nav" aria-label="Main">
+      <img class="nav__drop" src="assets/nav-drop.png" alt="" width="123" height="37" data-nav-drop>
+      <ul class="nav__list">
+        <li><a href="#story" class="is-active">About Rayyan</a></li>
+        <li><a href="#bottling">Our Products</a></li>
+        <li class="nav__gap"><a href="#source">Sustainability</a></li>
+        <li><a href="#mission">What’s happening</a></li>
+      </ul>
+    </nav>
+    <a class="contact" href="#footer">Contact us</a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Water ripple that follows the pointer behind every fold after the hero (5186:32040 Bg_Ripple) -->
   <div class="ripple-track" aria-hidden="true">
     <canvas class="ripple" data-ripple></canvas>
   </div>
 
-  <!-- Fold 02 — Rayyan story (3:1505) -->
+  <!-- Fold 02 — Rayyan story (5186:32164) -->
   <section class="story" id="story">
-    <div class="eyebrow-block">
-      <img class="squiggle" src="assets/squiggle-story.svg" alt="" width="13" height="119" data-reveal="draw">
-      <p class="eyebrow" data-reveal>Rayaan Story</p>
-    </div>
     <div class="story__stage">
-      <div class="story__image" data-parallax="-0.12">
-        <img src="assets/story-bottle.png" alt="A Rayyan bottle rising out of the desert ground, filled from the water below" width="1728" height="1301" data-reveal="rise">
+      <div class="story__image">
+        <img src="assets/story-bottle.webp" alt="A Rayyan bottle rising out of the desert ground, filled from the water below" width="1728" height="1123" data-reveal="rise">
       </div>
-      <h2 class="story__title" data-split>Founded in<br> 1984 by Khalid Bin Mohammed Al Rabban</h2>
-      <p class="story__copy" data-reveal="right">Drawn from a natural reservoir, Rayyan delivers pure, high-quality mineral water with world-class standards and commitment to sustainability.</p>
+      <div class="story__text">
+        <p class="story__label" data-reveal>Rayyan Story</p>
+        <img class="story__underline" src="assets/story-underline.png" alt="" width="45" height="3" data-reveal="wipe">
+        <h2 class="story__title" data-split>Founded in 1984 by Khalid<br> Bin Mohammed Al Rabban</h2>
+        <p class="story__copy" data-reveal>Rayyan delivers pure, high-quality mineral<br> water with world-class standards and a commitment to sustainability</p>
+      </div>
     </div>
   </section>
 
-  <!-- Fold 03 — mission and vision (3:1482) -->
+  <!-- Fold 03 — mission and vision (5186:32141) -->
   <section class="mission" id="mission">
     <div class="eyebrow-block">
-      <img class="squiggle" src="assets/squiggle-mission.svg" alt="" width="13" height="119" data-reveal="draw">
+      <img class="squiggle" src="assets/squiggle.png" alt="" width="14" height="121" data-reveal="draw">
       <p class="eyebrow" data-reveal>Mission and Vision</p>
     </div>
     <h2 class="headline headline--center" data-split>Pioneering natural refreshment through innovation, care, and sustainability.</h2>
 
     <div class="mission__row">
       <article class="founder" data-tilt data-reveal="left">
-        <div class="founder__flag"><img src="assets/founder-flag.png" alt=""></div>
-        <div class="founder__photo"><img src="assets/founder.png" alt="Khalid Bin Mohammed Al Rabban"></div>
+        <div class="founder__flag"><img src="assets/founder-flag.png" alt="" width="290" height="224"></div>
+        <div class="founder__photo"><img src="assets/founder.png" alt="Khalid Bin Mohammed Al Rabban" width="290" height="263"></div>
         <div class="founder__fade" aria-hidden="true"></div>
         <p class="founder__role">Founder</p>
         <h3 class="founder__name">Khalid Bin Mohammed Al Rabban</h3>
@@ -108,9 +89,9 @@
       </article>
 
       <div class="timeline" data-reveal="fade">
-        <img class="timeline__line timeline__line--h" src="assets/grid-line-h.svg" alt="" aria-hidden="true">
-        <img class="timeline__line timeline__line--v1" src="assets/grid-line-v1.svg" alt="" aria-hidden="true">
-        <img class="timeline__line timeline__line--v2" src="assets/grid-line-v2.svg" alt="" aria-hidden="true">
+        <span class="timeline__line timeline__line--h" aria-hidden="true"></span>
+        <span class="timeline__line timeline__line--v1" aria-hidden="true"></span>
+        <span class="timeline__line timeline__line--v2" aria-hidden="true"></span>
         <ol class="timeline__grid">
           <li class="timeline__cell"><span class="timeline__year" data-count="1984">1984</span><p>Rayyan launched at “aquifer-to-bottle” desert site</p></li>
           <li class="timeline__cell"><span class="timeline__year" data-count="1996">1996</span><p>First in Qatar/Middle East to shift to PET preforms &amp; in-house bottle making</p></li>
@@ -123,35 +104,35 @@
     </div>
   </section>
 
-  <!-- Fold 04 — the source (3:1470 + map labels 3:1545–3:1557) -->
+  <!-- Fold 04 — the source (5186:32113) -->
   <section class="source" id="source">
     <div class="source__art" data-source>
-      <img class="squiggle source__squiggle" src="assets/squiggle-source.svg" alt="" width="13" height="120" data-reveal="draw">
-      <img class="source__glow-circle" src="assets/source-glow-circle.svg" alt="" data-pulse>
+      <img class="squiggle source__squiggle" src="assets/squiggle.png" alt="" width="14" height="121" data-reveal="draw">
+      <img class="source__line" src="assets/source-pin-line.png" alt="" data-reveal="pin">
+      <img class="squiggle source__squiggle-low" src="assets/squiggle-low.png" alt="" width="14" height="121" data-reveal="draw">
+      <img class="source__glow-circle" src="assets/source-glow-circle.webp" alt="" aria-hidden="true">
       <div class="source__island" data-parallax="0.06">
-        <img src="assets/source-island.png" alt="Aerial view of the oasis reservoir that is the source of Rayyan water, with the word Source" width="1167" height="860" data-reveal="zoom">
+        <img src="assets/source-island.webp" alt="Aerial view of the oasis reservoir that is the source of Rayyan water, with the word Source" width="1167" height="860" data-reveal="zoom">
       </div>
       <p class="source__the" data-reveal="drop">The</p>
-      <img class="source__glow" src="assets/source-glow.svg" alt="" aria-hidden="true">
+      <img class="source__glow" src="assets/source-glow.webp" alt="" aria-hidden="true">
 
-      <img class="source__route" src="assets/source-route.svg" alt="" data-reveal="wipe">
-      <img class="source__pin source__pin--a" src="assets/source-pin-a.svg" alt="" data-reveal="pin">
-      <img class="source__pin source__pin--b" src="assets/source-pin-b.svg" alt="" data-reveal="pin">
-      <img class="source__line" src="assets/source-pin-line.svg" alt="" data-reveal="pin">
+      <img class="source__lake" src="assets/source-lake.png" alt="" aria-hidden="true">
+      <img class="source__pin source__pin--a" src="assets/source-pin-a.png" alt="" data-reveal="pin">
+      <img class="source__pin source__pin--b" src="assets/source-pin-b.png" alt="" data-reveal="pin">
       <p class="source__label source__label--chlorine" data-reveal="pin">Chlorine-Free</p>
       <p class="source__label source__label--mineral" data-reveal="pin">Natural Mineral Source</p>
-      <span class="source__dot source__dot--a" data-reveal="pin"><img src="assets/source-dot-a.svg" alt=""></span>
-      <span class="source__dot source__dot--b" data-reveal="pin"><img src="assets/source-dot-b.svg" alt=""></span>
-      <img class="squiggle source__squiggle-low" src="assets/squiggle-source-low.svg" alt="" width="13" height="120" data-reveal="draw">
+      <span class="source__dot source__dot--a" data-reveal="pin"><img src="assets/source-dot.png" alt=""></span>
+      <span class="source__dot source__dot--b" data-reveal="pin"><img src="assets/source-dot.png" alt=""></span>
 
-      <p class="source__quote" data-split>Drawn from a natural reservoir <em>60 km north of Doha</em>, filtered with zero-chlorine technology for a crisp, refreshing taste.”</p>
+      <p class="source__quote" data-split>Drawn from a natural reservoir<br> <em>60 km north of Doha</em>, filtered with zero-chlorine technology for a crisp, refreshing taste.”</p>
     </div>
   </section>
 
-  <!-- Fold 05 — our values (3:1458) -->
+  <!-- Fold 05 — our values (5186:32101) -->
   <section class="values" id="values">
     <div class="eyebrow-block">
-      <img class="squiggle" src="assets/squiggle-values.svg" alt="" width="13" height="120" data-reveal="draw">
+      <img class="squiggle" src="assets/squiggle.png" alt="" width="14" height="121" data-reveal="draw">
       <p class="eyebrow" data-reveal>Our Values</p>
     </div>
     <div class="values__row">
@@ -161,22 +142,22 @@
       </div>
       <ul class="values__grid">
         <li class="value" data-tilt data-reveal="card">
-          <span class="value__icon value__icon--1"><img src="assets/value-icon-1.png" alt=""></span>
+          <img class="value__icon" src="assets/value-icon-1.png" alt="" width="94" height="94">
           <h3>Quality is paramount</h3>
           <p>We ensure quality at every step to uphold the highest standards.</p>
         </li>
         <li class="value" data-tilt data-reveal="card">
-          <span class="value__icon value__icon--2"><img src="assets/value-icon-2.png" alt="" width="92" height="87"></span>
+          <img class="value__icon" src="assets/value-icon-2.png" alt="" width="94" height="94">
           <h3>Natural<br>Focus</h3>
           <p>We proudly offer nature’s best products for you and the community.</p>
         </li>
         <li class="value" data-tilt data-reveal="card">
-          <span class="value__icon value__icon--3"><img src="assets/value-icon-3.png" alt=""></span>
+          <img class="value__icon" src="assets/value-icon-3.png" alt="" width="94" height="94">
           <h3 class="value__narrow">Innovation is Key</h3>
           <p>We invest in technology &amp; people to stay ahead in our industry.</p>
         </li>
         <li class="value" data-tilt data-reveal="card">
-          <span class="value__icon value__icon--4"><img src="assets/value-icon-4.png" alt=""></span>
+          <img class="value__icon" src="assets/value-icon-4.png" alt="" width="94" height="94">
           <h3 class="value__narrow">Community Engagement</h3>
           <p>We partner with others to create a positive impact for our consumers.</p>
         </li>
@@ -184,79 +165,58 @@
     </div>
   </section>
 
-  <!-- Fold 06 — bottling (3:1451, card 3:1457) -->
+  <!-- Fold 06 — bottling (5186:32094, card 5186:32100) -->
   <section class="bottling" id="bottling">
     <div class="eyebrow-block">
-      <img class="squiggle" src="assets/squiggle-bottling.svg" alt="" width="13" height="120" data-reveal="draw">
+      <img class="squiggle" src="assets/squiggle.png" alt="" width="14" height="121" data-reveal="draw">
       <p class="eyebrow" data-reveal>Bottling</p>
     </div>
     <p class="statement" data-split>Hygienically made, contactless PET bottles—light, eco-friendly, and precisely packed.</p>
 
-    <div class="showcase" data-showcase data-slide="sparkling" data-reveal="fade" aria-roledescription="carousel" aria-label="Rayyan glass bottles">
+    <div class="showcase" data-showcase data-reveal="fade" aria-roledescription="carousel" aria-label="Rayyan Sparkling Water sizes">
       <div class="showcase__glass" aria-hidden="true"></div>
-      <img class="showcase__panel-left" src="assets/panel-left.svg" alt="" aria-hidden="true">
-      <div class="showcase__panel-right" aria-hidden="true">
-        <img src="assets/panel-right.svg" alt="">
-      </div>
-      <div class="showcase__texture" aria-hidden="true"><div><img src="assets/bottling-texture.png" alt=""></div></div>
+      <img class="showcase__panel-right" src="assets/panel-right.png" alt="" aria-hidden="true">
+      <img class="showcase__texture" src="assets/bottling-texture.webp" alt="" aria-hidden="true">
+      <img class="showcase__panel-left" src="assets/panel-left.png" alt="" aria-hidden="true">
       <div class="showcase__seam" aria-hidden="true"></div>
 
       <div class="showcase__intro">
-        <p class="showcase__tag">[ Bottling ]</p>
-        <div class="showcase__titles" aria-live="polite">
-          <h3 class="showcase__title" data-for="sparkling"><span class="sm">Sparkling</span> Water</h3>
-          <h3 class="showcase__title" data-for="still">Glass Bottle</h3>
-        </div>
-        <p class="showcase__copy" data-for="sparkling">A bottle of Rayyan Sparkling Water — pure refreshment and unforgettable taste, all in one elegant package.</p>
-        <p class="showcase__copy" data-for="still">Prestine &amp; Premium Natural water in elegant glass bottles</p>
+        <p class="showcase__tag" data-reveal>[ Bottling ]</p>
+        <h3 class="showcase__title" data-split><span class="sm">Sparkling</span> Water</h3>
+        <p class="showcase__copy" data-reveal>A bottle of Rayyan Sparkling Water — pure refreshment and unforgettable taste, all in one elegant package.</p>
       </div>
-      <img class="showcase__curve" src="assets/curved-arrow.svg" alt="" aria-hidden="true">
+      <img class="showcase__curve" src="assets/curved-arrow.png" alt="" aria-hidden="true">
 
-      <img class="showcase__ring" src="assets/drop-ring.svg" alt="" aria-hidden="true">
+      <img class="showcase__ring" src="assets/drop-ring.png" alt="" aria-hidden="true">
       <div class="showcase__hero" data-hero-bottle>
-        <img data-for="sparkling" src="assets/sparkling-750.png" alt="Rayyan Sparkling Water 750 ml glass bottle">
-        <img data-for="still" src="assets/still-750.png" alt="Rayyan Natural Still Water 750 ml glass bottle">
+        <img src="assets/sparkling-750.png" alt="Rayyan Sparkling Water glass bottle" width="206" height="671">
       </div>
 
-      <ul class="sizes" data-for="sparkling">
-        <li><button class="size is-active" type="button" data-bottle="assets/sparkling-750.png" style="--gap:38;--ah:182;--by:84">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-sparkling.svg" alt=""><img class="size__bottle" src="assets/sparkling-750.png" alt="" style="--x:7.09;--y:0;--w:55.85;--h:182"></span>
-          <span class="size__text"><strong class="gold">750 ml</strong><span>Sparkling Water</span><small>Prestine &amp; Premium Sparkling water in elegant glass bottles</small></span>
+      <ul class="sizes">
+        <li><button class="size is-active" type="button" data-scale="1" style="--gap:38;--tx:20">
+          <img class="size__art" src="assets/size-750.png" alt="" width="70" height="182">
+          <span class="size__text"><strong>750 ml</strong><span>Sparkling Water</span><small>Prestine &amp; Premium Sparkling water in elegant glass bottles</small></span>
         </button></li>
-        <li><button class="size" type="button" data-bottle="assets/sparkling-500.png" style="--gap:44;--ah:145;--by:54">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-sparkling.svg" alt=""><img class="size__bottle" src="assets/sparkling-500.png" alt="" style="--x:12;--y:1.5;--w:46;--h:150"></span>
-          <span class="size__text"><strong class="gold">500 ml</strong><span>Sparkling Water</span><small>Great for the gym or on the move. One bottle = two glasses.</small></span>
-        </button></li>
-        <li><button class="size" type="button" data-bottle="assets/sparkling-250.png" style="--gap:61;--ah:131;--by:40;--bw:70.39">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-sparkling-sm.svg" alt=""><img class="size__bottle" src="assets/sparkling-250.png" alt="" style="--x:17;--y:8.5;--w:35;--h:114"></span>
-          <span class="size__text"><strong class="gold">250 ml</strong><span>Sparkling Water</span><small>Prestine and Premium Sparkling water in elegant glass bottles</small></span>
-        </button></li>
-      </ul>
-      <ul class="sizes" data-for="still">
-        <li><button class="size is-active" type="button" data-bottle="assets/still-750.png" style="--gap:38;--ah:175;--by:84">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-still.svg" alt=""><img class="size__bottle" src="assets/still-750.png" alt="" style="--x:11.09;--y:0;--w:47;--h:175"></span>
-          <span class="size__text"><strong>750 ml</strong><span>Natural Still Water</span><small>Prestine &amp; Premium Natural water in elegant glass bottles</small></span>
-        </button></li>
-        <li><button class="size" type="button" data-bottle="assets/still-500.png" style="--gap:44;--ah:145;--by:54">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-still.svg" alt=""><img class="size__bottle" src="assets/still-500.png" alt="" style="--x:15;--y:-4.5;--w:39;--h:145"></span>
+        <li><button class="size" type="button" data-scale=".86" style="--gap:44;--tx:20">
+          <img class="size__art" src="assets/size-500.png" alt="" width="70" height="152">
           <span class="size__text"><strong>500 ml</strong><span>Sparkling Water</span><small>Great for the gym or on the move. One bottle = two glasses.</small></span>
         </button></li>
-        <li><button class="size" type="button" data-bottle="assets/still-250.png" style="--gap:61;--ah:131;--by:40;--bw:70.39">
-          <span class="size__art"><img class="size__base" src="assets/pedestal-still-sm.svg" alt=""><span class="size__bottle size__crop" style="--x:17;--y:3.5;--w:35;--h:119"><img src="assets/still-250.png" alt=""></span><img class="size__shadow" src="assets/still-shadow.svg" alt=""></span>
-          <span class="size__text"><strong>250 ml</strong><span>Sparkling Water</span><small>Prestine and Premium Natural water in elegant glass bottles</small></span>
+        <li><button class="size" type="button" data-scale=".72" style="--gap:61;--tx:10">
+          <img class="size__art" src="assets/size-250.png" alt="" width="71" height="131">
+          <span class="size__text"><strong>250 ml</strong><span>Sparkling Water</span><small>Prestine and Premium Sparkling water in elegant glass bottles</small></span>
         </button></li>
       </ul>
 
       <div class="showcase__arrows">
-        <button class="arrow" type="button" data-dir="-1" aria-label="Previous bottle"><img src="assets/arrow-prev.svg" alt=""></button>
-        <button class="arrow" type="button" data-dir="1" aria-label="Next bottle"><img src="assets/arrow-next.svg" alt=""></button>
+        <button class="arrow" type="button" data-dir="-1" aria-label="Previous size"><img src="assets/arrow-prev.png" alt="" width="30" height="28"></button>
+        <button class="arrow" type="button" data-dir="1" aria-label="Next size"><img src="assets/arrow-next.png" alt="" width="30" height="28"></button>
       </div>
     </div>
   </section>
 </main>
 
-<!-- Footer (3:1398) -->
-<footer class="site-footer">
+<!-- Footer (5186:32041) -->
+<footer class="site-footer" id="footer">
   <div class="ticker" aria-label="Natural Water, Desert Aquifer Water, Premium Mineral Water, Purity Bottled at Source, Sparkling water">
     <div class="ticker__track" data-ticker>
       <ul class="ticker__set">
@@ -265,38 +225,32 @@
     </div>
   </div>
   <div class="footer">
-    <div class="footer__texture" aria-hidden="true"><img src="assets/footer-texture.png" alt=""></div>
+    <img class="footer__texture" src="assets/footer-texture.webp" alt="" aria-hidden="true">
     <div class="footer__top">
       <a class="btn-register" href="#">Register with us</a>
       <a class="footer__logo" href="#top" aria-label="Back to top"><img src="assets/footer-logo.png" alt="Rayyan" width="122" height="89"></a>
       <div class="stores">
-        <a class="store" href="#" aria-label="Get it on Google Play">
-          <img class="store__icon" src="assets/store-playstore.svg" alt="" width="25" height="29">
-          <span class="store__text"><span class="store__small">Get it on</span><img class="store__word" src="assets/store-google-play.svg" alt="Google Play" width="89" height="18"></span>
-        </a>
-        <a class="store" href="#" aria-label="Download on the App Store">
-          <img class="store__icon" src="assets/store-apple.svg" alt="" width="24" height="29">
-          <span class="store__text store__text--apple"><span class="store__tiny">Download on the</span><span class="store__big">App Store</span></span>
-        </a>
+        <a class="store" href="#"><img src="assets/store-google.png" alt="Get it on Google Play" width="144" height="48"></a>
+        <a class="store" href="#"><img src="assets/store-apple.png" alt="Download on the App Store" width="144" height="48"></a>
       </div>
     </div>
     <nav class="footer__links" aria-label="Footer">
       <a href="#story">About Rayyan</a><a href="#bottling">Our Products</a><a href="#source">Sustainability</a><a href="#mission">What’s Happening</a>
     </nav>
-    <img class="footer__rule" src="assets/footer-rule.svg" alt="" aria-hidden="true">
+    <span class="footer__rule" aria-hidden="true"></span>
     <div class="footer__bottom">
       <div class="legal"><span>2025@ All right Reserved</span><a href="#">Privacy Policy</a><a href="#">Terms and Conditions</a></div>
       <div class="follow">
         <span>Follow us</span>
-        <a href="#" aria-label="Instagram"><img src="assets/social-instagram.svg" alt="" width="20" height="20"></a>
-        <a href="#" aria-label="X"><img src="assets/social-x.svg" alt="" width="20" height="20"></a>
-        <a href="#" aria-label="YouTube" class="follow__yt"><img src="assets/social-youtube.svg" alt=""></a>
-        <a href="#" aria-label="Facebook"><img src="assets/social-facebook.svg" alt="" width="20" height="20"></a>
+        <a href="#" aria-label="Instagram"><img src="assets/social-instagram.png" alt="" width="20" height="20"></a>
+        <a href="#" aria-label="X"><img src="assets/social-x.png" alt="" width="20" height="20"></a>
+        <a href="#" aria-label="YouTube"><img src="assets/social-youtube.png" alt="" width="20" height="20"></a>
+        <a href="#" aria-label="Facebook"><img src="assets/social-facebook.png" alt="" width="20" height="20"></a>
       </div>
     </div>
   </div>
 </footer>
 
-<script src="js/site.js?v=1"></script>
+<script src="js/site.js?v=2"></script>
 </body>
 </html>

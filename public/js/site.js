@@ -86,60 +86,54 @@
     });
   }
 
-  /* ---------- Header: hide on scroll down, show on scroll up ---------- */
-  const header = $('[data-header]');
-  let lastY = window.scrollY;
+  /* ---------- Navigation bar: shadow once stuck, drop marker under the current link ---------- */
+  const navbar = $('[data-navbar]');
+  const nav = $('.nav');
+  const drop = $('[data-nav-drop]');
+  const links = $$('.nav__list a');
+  const moveDrop = (a) => {
+    if (!a || !drop) return;
+    const nr = nav.getBoundingClientRect();
+    const r = a.getBoundingClientRect();
+    drop.style.transform = `translateX(${r.left - nr.left + r.width / 2 - drop.offsetWidth / 2}px)`;
+  };
+  const activeLink = () => links.find((a) => a.classList.contains('is-active'));
+  const setActive = (link) => {
+    links.forEach((a) => a.classList.toggle('is-active', a === link));
+    moveDrop(link);
+  };
+  links.forEach((a) => a.addEventListener('pointerenter', () => moveDrop(a)));
+  $('.nav__list').addEventListener('pointerleave', () => moveDrop(activeLink()));
+  requestAnimationFrame(() => moveDrop(activeLink()));
+  window.addEventListener('resize', () => moveDrop(activeLink()));
+  if (document.fonts) document.fonts.ready.then(() => moveDrop(activeLink()));
+
   const onScrollHeader = () => {
-    const y = window.scrollY;
-    header.classList.toggle('is-scrolled', y > 40);
-    if (y < window.innerHeight * 0.5 && links[0] && !links[0].classList.contains('is-active')) {
-      links.forEach((l, i) => l.classList.toggle('is-active', i === 0));
-      moveGlow(links[0]);
-    }
-    const menuOpen = header.classList.contains('menu-open');
-    if (!menuOpen) header.classList.toggle('is-hidden', y > lastY && y > window.innerHeight * 0.6);
-    lastY = y;
+    navbar.classList.toggle('is-stuck', navbar.getBoundingClientRect().top <= 0 && window.scrollY > 10);
+    if (window.scrollY < window.innerHeight * 0.5 && links[0] && !links[0].classList.contains('is-active')) setActive(links[0]);
   };
 
   // mobile menu
   const toggle = $('[data-menu-toggle]');
+  const closeMenu = () => {
+    navbar.classList.remove('menu-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+  };
   toggle.addEventListener('click', () => {
-    const open = !header.classList.contains('menu-open');
-    header.classList.toggle('menu-open', open);
+    const open = !navbar.classList.contains('menu-open');
+    navbar.classList.toggle('menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
-  $$('.nav__list a').forEach((a) => a.addEventListener('click', () => {
-    header.classList.remove('menu-open');
-    toggle.setAttribute('aria-expanded', 'false');
-  }));
-
-  // light that slides under the hovered / current nav link
-  const nav = $('.nav');
-  const glow = $('.nav__glow');
-  const links = $$('.nav__list a');
-  const moveGlow = (a) => {
-    if (!a) { glow.style.opacity = 0; return; }
-    const nr = nav.getBoundingClientRect();
-    const r = a.getBoundingClientRect();
-    glow.style.opacity = 1;
-    glow.style.width = `${r.width + 36}px`;
-    glow.style.transform = `translateX(${r.left - nr.left - 18}px)`;
-  };
-  const activeLink = () => links.find((a) => a.classList.contains('is-active'));
-  links.forEach((a) => a.addEventListener('pointerenter', () => moveGlow(a)));
-  nav.addEventListener('pointerleave', () => moveGlow(activeLink()));
-  requestAnimationFrame(() => moveGlow(activeLink()));
-  window.addEventListener('resize', () => moveGlow(activeLink()));
+  links.forEach((a) => a.addEventListener('click', closeMenu));
 
   // scroll spy
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       const link = links.find((a) => a.getAttribute('href') === `#${entry.target.id}`);
-      if (!link) return;
-      links.forEach((a) => a.classList.toggle('is-active', a === link));
-      moveGlow(link);
+      if (link) setActive(link);
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   links.forEach((a) => {
@@ -308,7 +302,7 @@
         const r = el.parentElement.getBoundingClientRect();
         if (r.bottom < -200 || r.top > vh + 200) return;
         const centre = r.top + r.height / 2 - vh / 2;
-        el.style.transform = `translate3d(0, ${centre * Number(el.dataset.parallax)}px, 0)`;
+        el.style.transform = `translate3d(0, ${clamp(centre * Number(el.dataset.parallax), -30, 30)}px, 0)`;
       });
       if (heroMedia) {
         const p = clamp(window.scrollY / vh, 0, 1);
@@ -360,45 +354,35 @@
     });
   });
 
-  /* ---------- Bottling showcase ---------- */
+  /* ---------- Bottling showcase: step through the sizes ---------- */
   const show = $('[data-showcase]');
   if (show) {
-    const slides = ['sparkling', 'still'];
-    const heroBottle = (slide) => $(`.showcase__hero img[data-for="${slide}"]`, show);
-    const go = (dir) => {
-      const now = show.dataset.slide;
-      const next = slides[(slides.indexOf(now) + dir + slides.length) % slides.length];
-      show.dataset.slide = next;
+    const sizes = $$('.size', show);
+    const bottle = $('.showcase__hero', show);
+    let current = 0;
+    const pick = (i) => {
+      current = (i + sizes.length) % sizes.length;
+      sizes.forEach((b, j) => {
+        b.classList.toggle('is-active', j === current);
+        b.setAttribute('aria-pressed', String(j === current));
+      });
+      bottle.style.setProperty('--bottle-scale', sizes[current].dataset.scale);
     };
-    $$('.arrow', show).forEach((b) => b.addEventListener('click', () => go(Number(b.dataset.dir))));
+    sizes.forEach((b, i) => b.addEventListener('click', () => pick(i)));
+    $$('.arrow', show).forEach((b) => b.addEventListener('click', () => pick(current + Number(b.dataset.dir))));
     show.tabIndex = 0;
     show.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') go(-1);
-      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') pick(current - 1);
+      if (e.key === 'ArrowRight') pick(current + 1);
     });
     let sx = null;
     show.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') sx = e.clientX; });
     show.addEventListener('pointerup', (e) => {
       if (sx === null) return;
       const dx = e.clientX - sx; sx = null;
-      if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > 50) pick(current + (dx < 0 ? 1 : -1));
     });
-
-    // picking a size swaps the big bottle
-    $$('.sizes', show).forEach((list) => {
-      const slide = list.dataset.for;
-      $$('.size', list).forEach((btn) => btn.addEventListener('click', () => {
-        if (btn.classList.contains('is-active')) return;
-        $$('.size', list).forEach((b) => b.classList.toggle('is-active', b === btn));
-        const img = heroBottle(slide);
-        img.classList.add('is-swapping');
-        setTimeout(() => {
-          img.src = btn.dataset.bottle;
-          const done = () => requestAnimationFrame(() => img.classList.remove('is-swapping'));
-          if (img.complete) done(); else img.addEventListener('load', done, { once: true });
-        }, reduceMotion ? 0 : 380);
-      }));
-    });
+    pick(0);
   }
 
   /* ---------- Footer ticker: repeat the set until it fills two widths ---------- */
