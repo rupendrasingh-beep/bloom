@@ -401,6 +401,97 @@
   // Size the goo layer to the whole scrollable list.
   function sizeGoo() { goo.style.height = `${list.scrollHeight}px`; }
 
+  // ---------- Side menu intro: drop → splash → pour → spin-in → drip ----------
+
+  const nav = $('#catnav');
+  const liquid = $('#liquid');
+  const PILL_X = 290; // pill centre inside the liquid layer
+  const PILL_TOP = 200;
+  let introTimers = [];
+
+  function liquidBead(size, x, y, frames, opts) {
+    const b = el('span', 'liquid-bead');
+    b.style.width = b.style.height = `${size}px`;
+    b.style.left = `${x - size / 2}px`;
+    b.style.top = `${y - size / 2}px`;
+    liquid.appendChild(b);
+    const anim = b.animate(frames, { fill: 'both', ...opts });
+    anim.onfinish = () => b.remove();
+  }
+
+  // Droplets thrown up by the impact, pulled back into the pill.
+  function impactSplash() {
+    for (let i = 0; i < 11; i++) {
+      const s = 14 + Math.random() * 30;
+      const dx = (Math.random() - 0.5) * 340;
+      const dy = -60 - Math.random() * 170;
+      liquidBead(s, PILL_X + (Math.random() - 0.5) * 60, PILL_TOP + 30, [
+        { transform: 'translate(0, 0) scale(.4)' },
+        { transform: `translate(${dx}px, ${dy}px) scale(1)`, offset: 0.45 },
+        { transform: `translate(${dx * 0.15}px, ${70 + Math.random() * 90}px) scale(.35)` },
+      ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2, .7, .3, 1)' });
+    }
+  }
+
+  // Bulges that ride down the sides with the pouring front, so the edges ripple.
+  function pourWaves() {
+    for (let i = 0; i < 8; i++) {
+      const side = i % 2 ? 1 : -1;
+      const s = 44 + Math.random() * 26;
+      const x = PILL_X + side * (74 + Math.random() * 14);
+      liquidBead(s, x, PILL_TOP + 120, [
+        { transform: 'translateY(0) scale(.3)' },
+        { transform: `translateY(${300 + i * 60}px) scale(1)`, offset: 0.35 },
+        { transform: `translateY(${1000 + Math.random() * 300}px) scale(.2)` },
+      ], { duration: 760 + Math.random() * 260, delay: i * 45, easing: 'cubic-bezier(.45, 0, .25, 1)' });
+    }
+  }
+
+  function playIntro() {
+    nav.classList.remove('is-pending');
+    if (reduceMotion) return;
+    introTimers.forEach(clearTimeout);
+    introTimers = [];
+    const at = (ms, fn) => introTimers.push(setTimeout(fn, ms));
+
+    nav.classList.remove('is-intro', 'is-done');
+    void nav.offsetWidth;
+    nav.classList.add('is-intro');
+    liquid.classList.add('is-gooey');
+
+    // Each item spins in as the pouring front reaches it (pour runs ~720–1430ms).
+    cats.forEach((c) => {
+      const front = (c.offsetTop + 35 + c.offsetHeight / 2) / 1580;
+      c.style.setProperty('--in', `${Math.round(700 + front * 710)}ms`);
+    });
+
+    // Park the bubble above the list until the pour is done.
+    cats.forEach((c) => c.classList.remove('is-active', 'is-pop'));
+    sim.target = sim.y = -340;
+    sim.v = 0;
+    sim.drops.forEach((dr) => { dr.y = -340; dr.v = 0; });
+    paint();
+
+    at(420, impactSplash);
+    at(720, pourWaves);
+    at(1480, () => {
+      sim.target = blobTargetFor(cats[activeIndex]);
+      sim.v = 900;
+      kick();
+    });
+    at(1760, () => {
+      const c = cats[activeIndex];
+      c.classList.add('is-active');
+      c.classList.remove('is-pop');
+      void c.offsetWidth;
+      c.classList.add('is-pop');
+      splash(sim.target, -1);
+    });
+    at(1900, () => nav.classList.add('is-done'));
+    at(2300, () => nav.classList.remove('is-intro'));
+    at(2400, () => liquid.classList.remove('is-gooey'));
+  }
+
   // ---------- Bottom bar ----------
 
   const restartIcon = $('.bb-restart__icon');
@@ -411,8 +502,11 @@
     activeChip = null;
     chipsEl.querySelectorAll('.chip').forEach((c) => { c.classList.remove('is-on'); c.setAttribute('aria-pressed', 'false'); });
     const pizza = CATEGORIES.findIndex((c) => c.id === 'pizza');
-    if (activeIndex !== pizza) select(pizza);
-    else { content.scrollTo({ top: 0, behavior: 'smooth' }); renderGrid(); }
+    if (activeIndex !== pizza) select(pizza, { animate: false });
+    setTitle(CATEGORIES[pizza].title, true);
+    content.scrollTo({ top: 0, behavior: 'smooth' });
+    renderGrid();
+    playIntro();
   });
 
   // ---------- Boot ----------
@@ -421,11 +515,13 @@
   renderGrid();
   sizeGoo();
   select(CATEGORIES.findIndex((c) => c.id === 'pizza'), { animate: false });
-  window.addEventListener('load', () => {
+  let booted = false;
+  function start() {
+    if (booted) return;
+    booted = true;
     sizeGoo();
-    sim.target = blobTargetFor(cats[activeIndex]);
-    sim.y = sim.target;
-    sim.drops.forEach((dr) => { dr.y = sim.target; });
-    paint();
-  });
+    playIntro();
+  }
+  window.addEventListener('load', start);
+  setTimeout(start, 1500);
 })();

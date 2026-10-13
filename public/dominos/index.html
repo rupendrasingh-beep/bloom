@@ -34,7 +34,11 @@
         </button>
       </header>
 
-      <nav class="catnav" aria-label="Menu categories">
+      <nav class="catnav is-pending" id="catnav" aria-label="Menu categories">
+        <div class="catnav__ring" aria-hidden="true"></div>
+        <div class="catnav__liquid" id="liquid" aria-hidden="true">
+          <div class="catnav__bg" id="navBg"></div>
+        </div>
         <div class="catnav__list" id="catList" role="tablist" aria-orientation="vertical">
           <div class="goo" aria-hidden="true">
             <div class="goo__blob" id="blob"></div>
