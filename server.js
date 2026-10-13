@@ -1,4 +1,4 @@
-// Bloom Dashboard — a tiny static file server with no dependencies.
+// Rayyan landing page — a tiny static file server with no dependencies.
 // Serves everything in ./public. Run with `npm start` (or `node server.js`).
 
 const http = require('node:http');
@@ -25,10 +25,11 @@ const TYPES = {
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
   '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
 };
 
 // Images and fonts never change between releases, so browsers may keep them for a year.
-const LONG_CACHE = /^\/(assets|assets-masks|fonts)\//;
+const LONG_CACHE = /^\/(assets|fonts)\//;
 
 const server = http.createServer((req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
@@ -68,5 +69,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Bloom Dashboard running at http://localhost:${PORT}`);
+  console.log(`Rayyan running at http://localhost:${PORT}`);
 });

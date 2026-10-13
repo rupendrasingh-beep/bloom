@@ -1,8 +1,8 @@
 {
-  "name": "bloom-dashboard",
+  "name": "rayyan-landing",
   "version": "1.0.0",
   "private": true,
-  "description": "Bloom employee dashboard — a static site built from the Figma design, with micro-interactions.",
+  "description": "Rayyan water landing page \u2014 a static site built from the Figma design, with scroll and pointer animations.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
