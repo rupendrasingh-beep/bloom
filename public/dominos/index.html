@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pizza Kiosk</title>
+  <meta name="description" content="Self-order kiosk menu built from the Figma design, with a fluid bubble category navigation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/dominos/kiosk.css" />
+</head>
+<body>
+  <!-- Gooey filter: blurs the white nav shapes together and re-sharpens the edge, so the
+       bubble and its droplets read as one liquid. -->
+  <svg class="defs" aria-hidden="true" width="0" height="0">
+    <defs>
+      <filter id="goo" x="-50%" y="-20%" width="200%" height="140%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -11" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="viewport">
+    <main class="stage" id="stage" aria-label="Pizza ordering kiosk">
+
+      <header class="topbar">
+        <img class="logo" src="/dominos/assets/dominos-logo.png" width="215" height="45" alt="Domino's" />
+        <button class="lang" type="button">
+          <img src="/dominos/assets/globe.png" width="24" height="24" alt="" />
+          <span>arabic</span>
+        </button>
+      </header>
+
+      <nav class="catnav" aria-label="Menu categories">
+        <div class="catnav__list" id="catList" role="tablist" aria-orientation="vertical">
+          <div class="goo" aria-hidden="true">
+            <div class="goo__blob" id="blob"></div>
+            <div class="goo__drop" data-drop="0"></div>
+            <div class="goo__drop" data-drop="1"></div>
+            <div class="goo__drop" data-drop="2"></div>
+          </div>
+        </div>
+      </nav>
+
+      <section class="content" id="content">
+        <h1 class="title" id="title" aria-live="polite">Explore Pizza Flavors</h1>
+        <div class="column">
+          <div class="chips" id="chips" role="toolbar" aria-label="Filters"></div>
+          <div class="grid" id="grid"></div>
+        </div>
+      </section>
+
+      <footer class="bottombar">
+        <button class="bb-btn bb-restart" id="restart" type="button">
+          <img class="bb-restart__icon" src="/dominos/assets/restart.png" width="32" height="32" alt="" />
+          <span>Restart Order</span>
+        </button>
+        <button class="bb-access" type="button" aria-label="Accessibility mode">
+          <img src="/dominos/assets/accessibility.png" width="37" height="42" alt="" />
+        </button>
+        <button class="bb-btn bb-allergen" type="button">
+          <img src="/dominos/assets/allergen.png" width="32" height="32" alt="" />
+          <span>Calorie and allergen</span>
+        </button>
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="/dominos/kiosk.js"></script>
+</body>
+</html>

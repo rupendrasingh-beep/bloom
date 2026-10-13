@@ -39,3 +39,14 @@ vercel.json        Vercel settings
 - **Font licence:** `public/fonts/` contains the Makira font files. Check that your licence allows serving them on a public website.
 - **Placeholder content:** the joiner profiles, careers, bios and intro captions in `public/js/app.js` (`PROFILES` and `HISTORY`) are placeholders. Replace them with real details.
 - **Intro videos:** add a real video per person with `video: 'assets/<file>.mp4'` in `PROFILES`.
+
+## Pizza kiosk (`/dominos`)
+
+A 1080 × 1920 self-order kiosk menu built from the Figma frame, served at `/dominos` (locally: http://localhost:3000/dominos/). The kiosk scales to fit any screen.
+
+- **Category nav:** the white bubble moves between categories as liquid. It runs on spring physics with trailing droplets, and an SVG "goo" filter merges them into one shape. Arrow keys work too.
+- **Menu:** cards fade in as you scroll, pizzas spin on hover or add, the Add button ripples and confirms, and the banner floats with a light shine.
+- **Filters:** Veg, Non-Veg and New Launch dim the items that don't match. Popular and Cheesy only highlight, because the design has no data for them.
+- **Restart order** resets the filters and returns to Pizza.
+
+Files: `public/dominos/index.html`, `kiosk.css`, `kiosk.js` and `assets/`, exported from Figma at 1x. The design only has pizza items, so the other categories change the title and replay the grid with the same pizzas.

@@ -1,0 +1,328 @@
+/* Pizza kiosk — built from Figma frame 38:129 (1080 × 1920 portrait kiosk). */
+
+@font-face { font-family: 'Makira'; src: url('/fonts/Makira-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Makira'; src: url('/fonts/Makira-Medium.otf') format('opentype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Makira'; src: url('/fonts/Makira-SemiBold.otf') format('opentype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Makira'; src: url('/fonts/Makira-ExtraBold.otf') format('opentype'); font-weight: 800; font-display: swap; }
+
+:root {
+  --blue: #0481c7;
+  --blue-dark: #036aa3;
+  --page: #f4f8fa;
+  --white: #fff;
+  --ink: #000;
+  --muted: #9d9cb5;
+  --hairline: #f4f0f3;
+  --red: #e21737;
+  --font: 'Makira', system-ui, sans-serif;
+  --font-ui: 'Manrope', system-ui, sans-serif;
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: #dfe7ec;
+  font-family: var(--font);
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+img { display: block; user-select: none; -webkit-user-drag: none; }
+.defs { position: absolute; width: 0; height: 0; }
+
+/* ---------- Stage: the 1080 × 1920 kiosk, scaled to fit any screen ---------- */
+.viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+.stage {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 1080px; height: 1920px;
+  background: var(--page);
+  overflow: hidden;
+  transform: translate(-50%, -50%) scale(var(--scale, .5));
+  transform-origin: center;
+  box-shadow: 0 30px 80px rgba(3, 40, 70, .18);
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: absolute; left: 0; top: 0; z-index: 5;
+  width: 1080px; height: 100px;
+  background: var(--white);
+}
+.logo { position: absolute; left: 41px; top: 27px; }
+.lang {
+  position: absolute; left: 916px; top: 28px;
+  width: 126px; height: 48px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--page); border-radius: 40px;
+  font-weight: 500; font-size: 14px;
+  transition: transform .35s var(--spring), background-color .2s;
+}
+.lang:active { transform: scale(.94); background: #e7eff4; }
+
+/* ---------- Category nav with fluid bubble ---------- */
+.catnav {
+  position: absolute; left: 30px; top: 178px; z-index: 4;
+  width: 180px; height: 1500px;
+  background: var(--blue);
+  border-radius: 140px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .04);
+}
+.catnav__list {
+  /* Items start at y 75 (Figma); 40px padding gives the bubble room above and below. */
+  position: absolute; left: 16px; top: 35px;
+  width: 149px; max-height: 1430px;
+  padding: 40px 0;
+  display: flex; flex-direction: column; gap: 50px;
+  overflow-y: auto; overflow-x: visible;
+  scrollbar-width: none;
+}
+.catnav__list::-webkit-scrollbar { display: none; }
+
+.goo {
+  position: absolute; left: -16px; top: 0;
+  width: 181px; height: 100%;
+  filter: url(#goo);
+  pointer-events: none;
+}
+.goo__blob, .goo__drop {
+  position: absolute; left: 16px; top: 0;
+  background: var(--white);
+  will-change: transform;
+}
+/* Active bubble: 149 × 203, Figma node 53:5291 */
+.goo__blob { width: 149px; height: 203px; border-radius: 50% / 33%; }
+.goo__drop { border-radius: 50%; }
+.goo__bead {
+  position: absolute; border-radius: 50%; background: var(--white);
+  animation: bead var(--dur, 900ms) var(--ease-out) forwards;
+}
+@keyframes bead {
+  0%   { transform: translate(0, 0) scale(1); }
+  60%  { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+
+.cat {
+  position: relative; flex: none;
+  width: 150px; height: 150px;
+  text-align: center;
+  touch-action: manipulation;
+}
+.cat__img {
+  position: absolute; max-width: none;
+  transition: transform .55s var(--spring), filter .4s;
+  transform-origin: 50% 70%;
+}
+.cat__label {
+  position: absolute; left: 0; right: 0; top: 126px;
+  font-weight: 800; font-size: 20px; line-height: normal;
+  color: var(--white); white-space: nowrap;
+  transition: color .3s ease .08s, transform .45s var(--spring);
+}
+.cat.is-active .cat__label { color: var(--blue); }
+.cat.is-active .cat__img { transform: scale(1.06) translateY(-3px); filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .12)); }
+.cat.is-pop .cat__img { animation: catPop .7s var(--spring); }
+.cat:active .cat__img { transform: scale(.93); }
+.cat:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 24px; }
+@keyframes catPop {
+  0%   { transform: scale(.86) rotate(-6deg); }
+  55%  { transform: scale(1.12) rotate(3deg) translateY(-6px); }
+  100% { transform: scale(1.06) translateY(-3px); }
+}
+
+/* ---------- Scrollable menu ---------- */
+.content {
+  position: absolute; left: 210px; top: 100px; z-index: 1;
+  width: 870px; height: 1720px;
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+  padding-bottom: 60px;
+}
+.content::-webkit-scrollbar { display: none; }
+
+.title {
+  margin: 0;
+  position: absolute; left: 100px; top: 70px;
+  width: 700px;
+  font-weight: 800; font-size: 60px; line-height: 1.2;
+  white-space: nowrap;
+}
+.title .ch { display: inline-block; white-space: pre; animation: chIn .6s var(--spring) both; animation-delay: calc(var(--i) * 18ms); }
+@keyframes chIn {
+  from { opacity: 0; transform: translateY(28px) scale(.9); filter: blur(4px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+.column {
+  position: relative;
+  margin: 179px 0 0 41px;
+  width: 790px;
+  display: flex; flex-direction: column; gap: 39px;
+  padding-bottom: 24px;
+}
+
+/* Filter chips */
+.chips { display: flex; gap: 18px; align-items: center; padding: 2px 0 6px; }
+.chip {
+  flex: none; height: 52px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--white); border-radius: 50px;
+  font-weight: 500; font-size: 18px; white-space: nowrap;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, .04)) drop-shadow(0 4px 4px rgba(0, 0, 0, .06));
+  box-shadow: inset 0 0 0 0 var(--blue);
+  transition: transform .45s var(--spring), box-shadow .3s var(--ease-out), background-color .3s;
+}
+.chip--popular { gap: 11px; }
+.chip:active { transform: scale(.94); }
+.chip.is-on { background: #eaf5fc; box-shadow: inset 0 0 0 2px var(--blue); transform: translateY(-2px); }
+.chip.is-on img { animation: wiggle .6s var(--spring); }
+@keyframes wiggle { 0% { transform: scale(.6) rotate(-20deg); } 100% { transform: none; } }
+
+/* Grid */
+.grid { display: flex; flex-direction: column; gap: 30px; }
+.row { display: flex; gap: 24px; align-items: center; }
+
+/* Product card — 248.857 × 361.829 */
+.card {
+  position: relative; flex: none;
+  width: 248.857px; height: 361.829px;
+  transition: opacity .45s var(--ease-out), transform .55s var(--spring), filter .45s;
+}
+.card__bg {
+  position: absolute; left: 0; top: 45.82px;
+  width: 248.857px; height: 316.008px;
+  background: var(--white); border-radius: 23.701px;
+  box-shadow: 0 0 3.16px rgba(0, 0, 0, .04), 0 3.16px 6.32px rgba(0, 0, 0, .06);
+  transition: box-shadow .4s var(--ease-out), transform .4s var(--ease-out);
+}
+.card:hover .card__bg { box-shadow: 0 0 3.16px rgba(0, 0, 0, .04), 0 14px 28px rgba(4, 60, 100, .12); }
+.card__cal {
+  position: absolute; left: 86.9px; top: 167.48px;
+  display: flex; align-items: flex-end; gap: 3.95px;
+  font-family: var(--font-ui); font-weight: 500; font-size: 14.22px; line-height: 1.3; letter-spacing: .1975px;
+  white-space: nowrap;
+}
+.card__pizza { position: absolute; left: 43.45px; top: 0; width: 162.744px; height: 154.844px; transform-origin: 50% 50%; }
+.card__pizza img { position: absolute; max-width: none; }
+.card__pizza .base { left: 0; top: 0; width: 162.744px; height: 154.844px; }
+.card:hover .card__pizza, .card.is-added .card__pizza { animation: spin 1.2s var(--ease-out); }
+@keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.card__tag {
+  position: absolute; left: 69px; top: 129.2px; width: 112px; height: 32px;
+  filter: drop-shadow(0 4px 4.3px rgba(226, 23, 55, .19));
+}
+.card__tag img { position: absolute; left: 0; top: 1.43px; width: 112px; height: 30.2px; }
+.card__tag span {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  font-weight: 800; font-size: 14.22px; line-height: 1.3; letter-spacing: .1975px; color: var(--white); white-space: nowrap;
+}
+.card__diet { position: absolute; left: 18.96px; top: 62.41px; width: 22.121px; height: 22.121px; }
+.card__name {
+  position: absolute; left: 0; right: 0; top: 198.2px;
+  margin: 0; text-align: center;
+  font-weight: 600; font-size: 18px; line-height: 1.2; white-space: nowrap;
+}
+.card--small-name .card__name { font-size: 15.8px; top: 198.3px; }
+.card__desc {
+  position: absolute; left: 50%; top: 228.32px; transform: translateX(-50%);
+  width: 207.775px; height: 42.661px; margin: 0;
+  font-weight: 400; font-size: 13.43px; line-height: 1.6; color: var(--muted); text-align: center;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.card__rule { position: absolute; left: 17.38px; top: 287.57px; width: 214.096px; height: 1px; background: var(--hairline); }
+.card__buy {
+  position: absolute; left: 20.54px; top: 304.95px;
+  display: flex; align-items: center; gap: 42.661px;
+}
+.card__price { font-weight: 600; font-size: 15.8px; line-height: 1.2; white-space: nowrap; }
+.add {
+  position: relative; overflow: hidden;
+  width: 90px; height: 40px; border-radius: 39.501px;
+  background: var(--blue); color: var(--white);
+  display: flex; align-items: center; justify-content: center; gap: 7.11px;
+  font-weight: 600; font-size: 12.64px; line-height: 1.2;
+  transition: transform .45s var(--spring), background-color .25s;
+}
+.card--compact-btn .add { width: 86.902px; height: 37.921px; }
+.add img { width: 18.96px; height: 18.96px; transition: transform .5s var(--spring); }
+.add:active { transform: scale(.92); }
+.add.is-added { background: #0a9a5b; }
+.add.is-added img { transform: translateY(-2px) rotate(-12deg) scale(1.15); }
+.add__ripple {
+  position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .45);
+  width: 12px; height: 12px; margin: -6px 0 0 -6px; pointer-events: none;
+  animation: ripple .65s var(--ease-out) forwards;
+}
+@keyframes ripple { to { transform: scale(18); opacity: 0; } }
+
+/* Entrance animation, driven by IntersectionObserver */
+.reveal { opacity: 0; transform: translateY(40px) scale(.97); }
+.reveal .card__pizza { transform: rotate(-60deg) scale(.7); opacity: 0; }
+.reveal.is-in { opacity: 1; transform: none; transition: opacity .6s var(--ease-out) var(--d, 0ms), transform .8s var(--spring) var(--d, 0ms); }
+.reveal.is-in .card__pizza { transform: none; opacity: 1; transition: transform 1s var(--ease-out) calc(var(--d, 0ms) + 80ms), opacity .5s calc(var(--d, 0ms) + 80ms); }
+
+.card.is-dim, .reveal.is-in.is-dim { opacity: .28; filter: grayscale(.7); transform: scale(.96); pointer-events: none; }
+
+/* Promo banner — Figma node 44:3660 */
+.banner { display: flex; flex-direction: column; align-items: center; width: 783px; }
+.banner__frame { position: relative; width: 783px; height: 300px; }
+.banner__bg {
+  position: absolute; left: 3.5px; top: 0; width: 783px; height: 280px;
+  border-radius: 63.936px; overflow: hidden;
+  transform: translateZ(0);
+}
+.banner__bg img { width: 783px; height: 280px; animation: kenburns 14s ease-in-out infinite alternate; transform-origin: 70% 60%; }
+.banner__bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .28) 48%, transparent 60%);
+  transform: translateX(-120%);
+  animation: shine 5.5s ease-in-out 1.2s infinite;
+}
+.banner__title {
+  position: absolute; left: 51.5px; top: 24.17px; width: 282px; height: 195px;
+  filter: drop-shadow(0 5.115px 9.59px rgba(0, 0, 0, .25));
+  animation: float 4.5s ease-in-out infinite;
+}
+.banner__dots { width: 53px; height: 15px; }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.06); } }
+@keyframes shine { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-7px) rotate(.6deg); } }
+
+/* ---------- Bottom bar ---------- */
+.bottombar {
+  position: absolute; left: 0; top: 1820px; z-index: 5;
+  width: 1080px; height: 100px;
+  background: var(--white);
+  border-top: 1px solid var(--page);
+}
+.bb-btn {
+  position: absolute; top: -1px; height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui); font-weight: 500; font-size: 25px; line-height: 1.2; text-transform: lowercase;
+  white-space: nowrap;
+  transition: transform .4s var(--spring);
+}
+.bb-btn:active { transform: scale(.95); }
+.bb-restart { left: 2px; width: 288px; gap: 2px; }
+.bb-restart span { padding: 10px; }
+.bb-restart__icon.is-spinning { animation: restart .8s var(--ease-out); }
+@keyframes restart { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.bb-allergen { right: 0; width: 371px; gap: 10px; }
+.bb-access {
+  position: absolute; left: 490px; top: 0; width: 100px; height: 99px;
+  border-left: 1px solid #f1edf1; border-right: 1px solid #f1edf1;
+  display: grid; place-items: center;
+  transition: background-color .25s;
+}
+.bb-access img { position: absolute; left: 31px; top: 28px; }
+.bb-access:active { background: var(--page); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}
