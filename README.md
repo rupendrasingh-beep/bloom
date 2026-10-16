@@ -44,7 +44,13 @@ vercel.json        Vercel settings
 
 A 1080 × 1920 self-order kiosk menu built from the Figma frame, served at `/dominos` (locally: http://localhost:3000/dominos/). The kiosk scales to fit any screen.
 
-- **Side menu intro:** on load, and again on Restart order, a blue drop falls in, splashes and pours down into the menu. The items spin in as the liquid reaches them, the white bubble drips onto Pizza, and the menu wobbles with a ripple ring and a shine.
+- **Side menu intros:** four entrance styles. Each Restart order plays the next one in turn:
+  - *Dominoes:* the panel folds down in 3D, and each category tips over like a falling domino, throwing off three white pips.
+  - *Wave:* the panel sweeps in from the left while a wave ripples down its edge. The items whip in behind it.
+  - *Vortex:* a spinning portal opens in the middle of the panel and spirals every item out to its place.
+  - *Liquid:* a blue drop falls, splashes and pours down into the menu, and the white bubble drips onto Pizza.
+
+  Add `?intro=dominoes` (or `wave`, `vortex`, `liquid`) to the URL to always play one style. Add `?demo` to show buttons in the top bar for switching between them.
 - **Category nav:** the white bubble moves between categories as liquid. It runs on spring physics with trailing droplets, and an SVG "goo" filter merges them into one shape. Arrow keys work too.
 - **Menu:** cards fade in as you scroll, pizzas spin on hover or add, the Add button ripples and confirms, and the banner floats with a light shine.
 - **Filters:** Veg, Non-Veg and New Launch dim the items that don't match. Popular and Cheesy only highlight, because the design has no data for them.

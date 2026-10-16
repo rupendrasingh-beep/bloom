@@ -447,49 +447,202 @@
     }
   }
 
-  function playIntro() {
+  // Pick the intro with ?intro=liquid|dominoes|wave|vortex. Without it, each replay
+  // (Restart order) moves on to the next style, so the kiosk keeps surprising.
+  const INTRO_STYLES = ['dominoes', 'wave', 'vortex', 'liquid'];
+  const params = new URLSearchParams(location.search);
+  const pinnedIntro = INTRO_STYLES.includes(params.get('intro')) ? params.get('intro') : null;
+  let introCursor = -1;
+  function nextIntroStyle() {
+    if (pinnedIntro) return pinnedIntro;
+    introCursor = (introCursor + 1) % INTRO_STYLES.length;
+    return INTRO_STYLES[introCursor];
+  }
+
+  const blobCenterY = () => sim.target + BLOB_H / 2;
+
+  function parkBubble(y) {
+    sim.target = sim.y = y;
+    sim.v = 0;
+    sim.drops.forEach((dr) => { dr.y = y; dr.v = 0; });
+    paint();
+  }
+
+  function activateCurrent() {
+    const c = cats[activeIndex];
+    c.classList.add('is-active');
+    c.classList.remove('is-pop');
+    void c.offsetWidth;
+    c.classList.add('is-pop');
+  }
+
+  // Item centre in the nav's own coordinates (the list sits 35px down, 16px in).
+  const itemCenterY = (c) => 35 + c.offsetTop - list.scrollTop + c.offsetHeight / 2;
+
+  const INTROS = {
+    liquid(at) {
+      liquid.classList.add('is-gooey');
+      // Each item spins in as the pouring front reaches it (pour runs ~720–1430ms).
+      cats.forEach((c) => {
+        const front = (c.offsetTop + 35 + c.offsetHeight / 2) / 1580;
+        c.style.setProperty('--in', `${Math.round(700 + front * 710)}ms`);
+      });
+      at(420, impactSplash);
+      at(720, pourWaves);
+      at(1480, () => {
+        sim.target = blobTargetFor(cats[activeIndex]);
+        sim.v = 900;
+        kick();
+      });
+      at(1760, () => { activateCurrent(); splash(sim.target, -1); });
+      return 1900;
+    },
+
+    dominoes(at) {
+      const STEP = 115;
+      const FIRST = 520;
+      cats.forEach((c, i) => {
+        const delay = FIRST + i * STEP;
+        c.style.setProperty('--in', `${delay}ms`);
+        at(delay + 470, () => dominoPips(c)); // the moment the tile slaps down
+      });
+      const landed = FIRST + (cats.length - 1) * STEP + 640;
+      at(landed, () => {
+        parkBubble(blobTargetFor(cats[activeIndex]));
+        popGoo([
+          { transform: 'scale(0)', opacity: 0 },
+          { transform: 'scale(1.18)', opacity: 1, offset: 0.55 },
+          { transform: 'scale(.94)', offset: 0.78 },
+          { transform: 'scale(1)', opacity: 1 },
+        ], 650, 'cubic-bezier(.3, 1.4, .5, 1)');
+      });
+      at(landed + 180, () => { activateCurrent(); splash(sim.target, -1); });
+      return landed + 300;
+    },
+
+    wave(at) {
+      liquid.classList.add('is-gooey');
+      waveEdge();
+      cats.forEach((c, i) => c.style.setProperty('--in', `${260 + i * 75}ms`));
+      at(1150, () => {
+        parkBubble(blobTargetFor(cats[activeIndex]));
+        popGoo([
+          { transform: 'translateX(-200px) skewX(-24deg)', opacity: 0 },
+          { transform: 'translateX(16px) skewX(7deg)', opacity: 1, offset: 0.6 },
+          { transform: 'translateX(-4px) skewX(-2deg)', offset: 0.82 },
+          { transform: 'none', opacity: 1 },
+        ], 750, 'cubic-bezier(.2, .8, .3, 1)');
+      });
+      at(1420, () => { activateCurrent(); splash(sim.target, 1); });
+      return 1600;
+    },
+
+    vortex(at) {
+      const mid = 750; // nav centre
+      cats.forEach((c, i) => {
+        const fromY = mid - itemCenterY(c);
+        c.style.setProperty('--from-y', `${fromY}px`);
+        c.style.setProperty('--spin', `${i % 2 ? -540 : 540}deg`);
+        c.style.setProperty('--in', `${Math.round(560 + (Math.abs(fromY) / 700) * 420)}ms`);
+      });
+      at(1250, () => {
+        // The bubble is born in the middle of the portal and flows to its item.
+        const target = blobTargetFor(cats[activeIndex]);
+        parkBubble(mid - 35 + list.scrollTop - BLOB_H / 2);
+        sim.target = target;
+        kick();
+        popGoo([{ opacity: 0, filter: 'blur(4px)' }, { opacity: 1, filter: 'none' }], 260, 'ease-out');
+      });
+      at(1700, () => { activateCurrent(); splash(sim.target, -1); });
+      return 1850;
+    },
+  };
+
+  function popGoo(frames, duration, easing) {
+    goo.getAnimations().forEach((a) => a.cancel());
+    goo.style.transformOrigin = `${16 + BLOB_W / 2}px ${blobCenterY()}px`;
+    goo.animate(frames, { duration, easing });
+  }
+
+  // Domino's pips: three white dots bounce off each tile as it lands.
+  function dominoPips(c) {
+    const y = itemCenterY(c) + 60;
+    [-1, 0, 1].forEach((k) => {
+      const pip = el('span', 'domino-pip');
+      pip.style.left = `${16 + 75 + k * 46}px`;
+      pip.style.top = `${y}px`;
+      nav.appendChild(pip);
+      const dx = k * (40 + Math.random() * 30) + (k === 0 ? (Math.random() - 0.5) * 40 : 0);
+      const anim = pip.animate([
+        { transform: 'translate(0, 0) scale(.3)', opacity: 1 },
+        { transform: `translate(${dx * 0.6}px, -46px) scale(1)`, opacity: 1, offset: 0.4 },
+        { transform: `translate(${dx}px, 10px) scale(.2)`, opacity: 0 },
+      ], { duration: 650, easing: 'cubic-bezier(.2, .7, .4, 1)' });
+      anim.onfinish = () => pip.remove();
+    });
+  }
+
+  // Beads along the right edge, merged by the gooey filter, ride in with the panel and
+  // then ripple as a travelling wave that settles flat.
+  function waveEdge() {
+    const N = 16;
+    const size = 64;
+    const baseX = PILL_X + 90 - size / 2;
+    for (let i = 0; i < N; i++) {
+      const y = PILL_TOP + 50 + i * (1400 / (N - 1));
+      const frames = [];
+      for (let f = 0; f <= 24; f++) {
+        const t = f / 24;
+        const slide = t < 0.42 ? -300 * Math.pow(1 - t / 0.42, 3) : 0;
+        const amp = 44 * Math.pow(Math.max(0, 1 - t), 1.6) * Math.min(1, t / 0.15);
+        const wave = amp * Math.sin(t * 15 - i * 0.62);
+        frames.push({ transform: `translateX(${(slide + Math.max(-30, wave)).toFixed(1)}px)` });
+      }
+      liquidBead(size, baseX + size / 2, y, frames, { duration: 1700, easing: 'linear' });
+    }
+  }
+
+  const INTRO_CLASSES = INTRO_STYLES.map((n) => `intro-${n}`);
+
+  function playIntro(style = nextIntroStyle()) {
     nav.classList.remove('is-pending');
     if (reduceMotion) return;
     introTimers.forEach(clearTimeout);
     introTimers = [];
     const at = (ms, fn) => introTimers.push(setTimeout(fn, ms));
 
-    nav.classList.remove('is-intro', 'is-done');
+    nav.classList.remove('is-intro', 'is-done', ...INTRO_CLASSES);
+    liquid.classList.remove('is-gooey');
+    liquid.querySelectorAll('.liquid-bead').forEach((b) => b.remove());
+    goo.getAnimations().forEach((a) => a.cancel());
     void nav.offsetWidth;
-    nav.classList.add('is-intro');
-    liquid.classList.add('is-gooey');
+    nav.classList.add('is-intro', `intro-${style}`);
+    picker?.querySelectorAll('button').forEach((b) => b.classList.toggle('is-on', b.dataset.intro === style));
 
-    // Each item spins in as the pouring front reaches it (pour runs ~720–1430ms).
-    cats.forEach((c) => {
-      const front = (c.offsetTop + 35 + c.offsetHeight / 2) / 1580;
-      c.style.setProperty('--in', `${Math.round(700 + front * 710)}ms`);
-    });
-
-    // Park the bubble above the list until the pour is done.
+    // Hide the bubble above the list until the style brings it in.
     cats.forEach((c) => c.classList.remove('is-active', 'is-pop'));
-    sim.target = sim.y = -340;
-    sim.v = 0;
-    sim.drops.forEach((dr) => { dr.y = -340; dr.v = 0; });
-    paint();
+    parkBubble(-340);
 
-    at(420, impactSplash);
-    at(720, pourWaves);
-    at(1480, () => {
-      sim.target = blobTargetFor(cats[activeIndex]);
-      sim.v = 900;
-      kick();
+    const doneAt = INTROS[style](at);
+    at(doneAt, () => nav.classList.add('is-done'));
+    at(doneAt + 450, () => {
+      nav.classList.remove('is-intro', ...INTRO_CLASSES);
+      liquid.classList.remove('is-gooey');
     });
-    at(1760, () => {
-      const c = cats[activeIndex];
-      c.classList.add('is-active');
-      c.classList.remove('is-pop');
-      void c.offsetWidth;
-      c.classList.add('is-pop');
-      splash(sim.target, -1);
+  }
+
+  // ?demo shows a switcher in the top bar to compare the intros.
+  let picker = null;
+  if (params.has('demo')) {
+    picker = el('div', 'intro-picker');
+    INTRO_STYLES.forEach((n) => {
+      const b = el('button', '', n);
+      b.type = 'button';
+      b.dataset.intro = n;
+      b.addEventListener('click', () => playIntro(n));
+      picker.appendChild(b);
     });
-    at(1900, () => nav.classList.add('is-done'));
-    at(2300, () => nav.classList.remove('is-intro'));
-    at(2400, () => liquid.classList.remove('is-gooey'));
+    $('.topbar').appendChild(picker);
   }
 
   // ---------- Bottom bar ----------
