@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ball Loop</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0A0A0B; }
+  body { display: grid; place-items: center; overflow: hidden; }
+  canvas { display: block; width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; }
+  body.render canvas { width: 1920px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/*
+  Ball Loop: a 10 s, 1920x1080, 60 fps UI motion film.
+  Every pixel comes from seek(t). Nothing is stored between frames,
+  so any frame can be rendered on its own and t = 10 matches t = 0.
+*/
+(() => {
+'use strict';
+
+// ---------- Inputs ----------
+const INPUT = {
+  target: 100,
+  cards: [
+    { title: 'Slider',   body: 'Reached 100' },
+    { title: 'Gravity',  body: 'Something is falling' },
+    { title: 'Messages', body: 'What now?' },
+  ],
+  reply: 'retry',
+  accent: '#2E6BFF',
+};
+
+// ---------- Constants ----------
+const W = 1920, H = 1080, DUR = 10, FPS = 60, BPM = 120, BEAT = 60 / BPM;
+const FONT = 'Inter, "Inter Display", system-ui, -apple-system, "Segoe UI", sans-serif';
+const COL = {
+  bg: '#0A0A0B',
+  dot: 'rgba(255,255,255,0.11)',
+  track: '#26262B',
+  ctrl: '#1C1C20',
+  ctrl2: '#2A2A30',
+  key: '#232328',
+  keyHi: '#4A4A53',
+  panel: '#131316',
+  card: '#141417',
+  line: 'rgba(255,255,255,0.075)',
+  text: '#F5F5F7',
+  text2: 'rgba(235,235,245,0.62)',
+  text3: 'rgba(235,235,245,0.34)',
+  blue: INPUT.accent,
+  ball: '#FAFAFA',
+};
+const R = 26; // ball radius (world units)
+
+// ---------- World layout (world units, 1 unit = 1 px at zoom 1) ----------
+const TOG = { cx: -800, cy: -360, w: 148, h: 76 };
+const OFF = TOG.cx - TOG.w / 2 + 12 + R; // -836
+const ON  = TOG.cx + TOG.w / 2 - 12 - R; // -764
+const SL = { x0: -380, x1: 430, y: -360, h: 14, knobR: 40 };
+const CARDX = 90, CARDW = 620;
+const CARDS = [
+  { y: -240, h: 108, icon: 'slider',  arrive: 3.0, tap: 3.5, land: [548, -186] },
+  { y: -116, h: 108, icon: 'gravity', arrive: 3.5, tap: 4.0, land: [590, -62] },
+  { y: 8,    h: 116, icon: 'message', arrive: 4.0, tap: 4.5, land: null },
+].map((c, i) => Object.assign(c, INPUT.cards[i]));
+const PILL = { x: CARDX + CARDW - 24 - 108, y: CARDS[2].y + 58, w: 108, h: 44 };
+CARDS[2].land = [PILL.x + PILL.w / 2, PILL.y + PILL.h / 2];
+const FIELD = { x: CARDX, y: 156, w: CARDW, h: 68 };
+const SEND = { x: FIELD.x + FIELD.w - 38, y: FIELD.y + FIELD.h / 2, r: 24 };
+const KB = { x: -25, y: 262, w: 850, h: 406 };
+
+// Keyboard keys
+const KEYS = [];
+(function buildKeys() {
+  const kw = 72, kh = 84, gap = 10, step = kw + gap;
+  const rows = [
+    { s: 'qwertyuiop', x: -5,  y: 282 },
+    { s: 'asdfghjkl',  x: 36,  y: 376 },
+    { s: 'zxcvbnm',    x: 118, y: 470 },
+  ];
+  rows.forEach(r => [...r.s].forEach((ch, i) =>
+    KEYS.push({ id: ch, label: ch, x: r.x + i * step, y: r.y, w: kw, h: kh })));
+  KEYS.push({ id: 'shift', label: '⇧', x: -4, y: 470, w: 112, h: kh, small: true });
+  KEYS.push({ id: 'back', label: '⌫', x: 692, y: 470, w: 112, h: kh, small: true });
+  KEYS.push({ id: '123', label: '123', x: -5, y: 564, w: 112, h: kh, small: true });
+  KEYS.push({ id: 'space', label: 'space', x: 117, y: 564, w: 488, h: kh, small: true });
+  KEYS.push({ id: 'return', label: 'return', x: 615, y: 564, w: 190, h: kh, small: true });
+})();
+const keyById = id => KEYS.find(k => k.id === id);
+const keyLand = k => [k.x + k.w / 2, k.y + 56];
+
+// ---------- Timing ----------
+const T = {
+  cursorDown: 0.42, click: 0.5, toggleHit: 0.62, launch: 0.78, knobLand: 1.5,
+  slideStart: 1.62, hundred: 3.0,
+  morph: 4.53, keyboard: 4.72, leaveField: 5.0,
+  firstKey: 5.5, keyStep: 0.25,
+  send: 0, contract: 0, home: 9.0, homeSlide: 9.1,
+};
+const TYPED = [...INPUT.reply].map((ch, i) => ({ ch, t: T.firstKey + i * T.keyStep }));
+T.send = TYPED[TYPED.length - 1].t + 0.5;   // 7.0
+T.contract = T.send + 0.12;
+
+// ---------- Math helpers ----------
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, u) => a + (b - a) * u;
+const inv = (a, b, v) => clamp((v - a) / (b - a));
+const easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+const easeOut = u => 1 - Math.pow(1 - u, 3);
+const smooth = u => u * u * (3 - 2 * u);
+// Closed-form damped spring step response (0 -> 1).
+function spring(tau, w = 24, z = 0.7) {
+  if (tau <= 0) return 0;
+  const wd = w * Math.sqrt(1 - z * z);
+  return 1 - Math.exp(-z * w * tau) * (Math.cos(wd * tau) + (z * w / wd) * Math.sin(wd * tau));
+}
+// Decaying impulse used for squash (A at impact, rings out quickly).
+function ring(tau, A, w = 38, z = 0.45) {
+  if (tau < 0 || tau > 0.6) return 0;
+  const wd = w * Math.sqrt(1 - z * z);
+  return A * Math.exp(-z * w * tau) * Math.cos(wd * tau);
+}
+// Cubic Hermite 0->1 with end slopes m0, m1.
+const hermite = (u, m0, m1) =>
+  (u * u * u - 2 * u * u + u) * m0 + (-2 * u * u * u + 3 * u * u) + (u * u * u - u * u) * m1;
+function mixHex(a, b, u) {
+  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+  const ch = s => [(s >> 16) & 255, (s >> 8) & 255, s & 255];
+  const A = ch(pa), B = ch(pb);
+  return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], u))).join(',')})`;
+}
+const bez = (p0, p1, p2, p3, u) => {
+  const v = 1 - u;
+  return v * v * v * p0 + 3 * v * v * u * p1 + 3 * v * u * u * p2 + u * u * u * p3;
+};
+
+// ---------- Slider motion ----------
+const SLIDE_M1 = 1.2; // knob arrives at 100 still moving: the stop kicks the ball on
+function sliderX(t) {
+  const u = inv(T.slideStart, T.hundred, t);
+  return lerp(SL.x0, SL.x1, hermite(u, 0, SLIDE_M1));
+}
+const valueAt = x => Math.round(INPUT.target * inv(SL.x0, SL.x1, x));
+
+// ---------- Field morph ----------
+const morphAt = t => spring(t - T.morph, 17, 0.82);
+const contractAt = t => spring(t - T.contract, 16, 0.8);
+const BUBBLE = (() => {
+  const w = 48 + INPUT.reply.length * 12.5, h = 50;
+  return { x: FIELD.x + FIELD.w - w, y: FIELD.y + (FIELD.h - h) / 2, w, h };
+})();
+
+// ---------- Ball route ----------
+// Each segment maps t -> [x, y]. Impacts drive squash. 'air' segments stretch with speed.
+const SEG = [];
+const IMPACTS = [];
+const hop = (p0, p1, t0, t1, h) => SEG.push({ t0, t1, air: true, f: t => {
+  const u = inv(t0, t1, t);
+  return [lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u) - 4 * h * u * (1 - u)];
+}});
+// rest at OFF, then the click slides it to ON
+SEG.push({ t0: -1, t1: T.click, f: () => [OFF, TOG.cy] });
+SEG.push({ t0: T.click, t1: T.launch, f: t => [lerp(OFF, ON, spring(t - T.click, 30, 0.72)), TOG.cy] });
+// springs free toward the slider knob
+hop([ON, TOG.cy], [SL.x0, SL.y], T.launch, T.knobLand, 190);
+IMPACTS.push({ t: T.knobLand, A: 0.22, axis: 'v' });
+// drives the knob to 100
+SEG.push({ t0: T.knobLand, t1: T.hundred, f: t => [sliderX(t), SL.y] });
+IMPACTS.push({ t: T.hundred, A: 0.14, axis: 'h' });
+// down the notification cards
+hop([SL.x1, SL.y], CARDS[0].land, T.hundred, CARDS[0].tap, 110);
+hop(CARDS[0].land, CARDS[1].land, CARDS[0].tap, CARDS[1].tap, 80);
+hop(CARDS[1].land, CARDS[2].land, CARDS[1].tap, CARDS[2].tap, 80);
+CARDS.forEach(c => IMPACTS.push({ t: c.tap, A: 0.18, axis: 'v' }));
+// rides the Reply pill as it stretches into the field
+SEG.push({ t0: CARDS[2].tap, t1: T.leaveField, f: t => {
+  const m = morphAt(t);
+  return [lerp(CARDS[2].land[0], SEND.x, m), lerp(CARDS[2].land[1], SEND.y, m)];
+}});
+// typing
+let prev = [SEND.x, SEND.y], prevT = T.leaveField;
+TYPED.forEach((k, i) => {
+  const p = keyLand(keyById(k.ch));
+  hop(prev, p, prevT, k.t, i === 0 ? 120 : 85);
+  IMPACTS.push({ t: k.t, A: 0.13, axis: 'v' });
+  prev = p; prevT = k.t;
+});
+const RET = keyLand(keyById('return'));
+hop(prev, RET, prevT, T.send, 110);
+IMPACTS.push({ t: T.send, A: 0.2, axis: 'v' });
+// the long way home
+const HOME = { p0: RET, p1: [560, 120], p2: [-700, -820], p3: [ON, TOG.cy] };
+SEG.push({ t0: T.send, t1: T.home, air: true, f: t => {
+  const u = hermite(inv(T.send, T.home, t), 1.5, 1.3);
+  return [bez(HOME.p0[0], HOME.p1[0], HOME.p2[0], HOME.p3[0], u),
+          bez(HOME.p0[1], HOME.p1[1], HOME.p2[1], HOME.p3[1], u)];
+}});
+IMPACTS.push({ t: T.home, A: 0.22, axis: 'v' });
+SEG.push({ t0: T.home, t1: 99, f: t => [lerp(ON, OFF, spring(t - T.homeSlide, 22, 0.72)), TOG.cy] });
+
+function segAt(t) {
+  for (const s of SEG) if (t >= s.t0 && t < s.t1) return s;
+  return SEG[SEG.length - 1];
+}
+const ballPos = t => segAt(t).f(t);
+
+// ---------- Camera (center + log-space zoom) ----------
+const CAM = [
+  [0.00, -800, -345, 2.6],
+  [0.70, -800, -345, 2.6],
+  [1.55,    5, -395, 1.55],
+  [3.00,   45, -395, 1.58],
+  [4.55,  400,   15, 1.72],
+  [5.35,  400,  345, 1.55],
+  [7.30,  400,  345, 1.55],
+  [8.30,  -25,   99, 0.83],
+  [8.50,  -25,   99, 0.83],
+  [9.50, -800, -345, 2.6],
+  [10.0, -800, -345, 2.6],
+];
+function camera(t) {
+  let i = 0;
+  while (i < CAM.length - 2 && t >= CAM[i + 1][0]) i++;
+  const a = CAM[i], b = CAM[i + 1];
+  const u = easeInOut(inv(a[0], b[0], t));
+  return { x: lerp(a[1], b[1], u), y: lerp(a[2], b[2], u), z: Math.exp(lerp(Math.log(a[3]), Math.log(b[3]), u)) };
+}
+
+// ---------- Cursor (world-anchored, screen-sized) ----------
+const CUR_REST = [-690, -260], CUR_HIT = [OFF + 4, TOG.cy + 6];
+function cursorAt(t) {
+  let p;
+  if (t < T.cursorDown) {
+    const u = easeInOut(inv(0, T.cursorDown - 0.02, t));
+    p = [bez(CUR_REST[0], -700, -800, CUR_HIT[0], u), bez(CUR_REST[1], -330, -330, CUR_HIT[1], u)];
+  } else if (t < 0.62) {
+    p = CUR_HIT.slice();
+  } else {
+    const u = easeInOut(inv(0.62, 1.3, t));
+    p = [lerp(CUR_HIT[0], CUR_REST[0], u), lerp(CUR_HIT[1], CUR_REST[1], u)];
+  }
+  const press = t >= T.cursorDown && t < T.click ? smooth(inv(T.cursorDown, T.cursorDown + 0.05, t))
+              : t >= T.click ? 1 - smooth(inv(T.click, T.click + 0.08, t)) : 0;
+  return { p, press };
+}
+
+// ---------- Scene state helpers ----------
+function toggleFill(t) {
+  if (t < T.click) return 0;
+  if (t < T.launch) return inv(OFF, ON, ballPos(t)[0]);
+  if (t < T.home) return 1;
+  return inv(OFF, ON, ballPos(t)[0]);
+}
+function knobX(t) { return t < T.knobLand ? SL.x0 : t < T.hundred ? sliderX(t) : SL.x1; }
+const cardIn = (c, t) => ({ a: smooth(inv(c.arrive, c.arrive + 0.18, t)), dx: 90 * (1 - spring(t - c.arrive, 22, 0.78)) });
+const typedAt = t => TYPED.filter(k => t >= k.t).map(k => k.ch).join('');
+const keyPress = (k, t) => {
+  let p = 0;
+  TYPED.forEach(e => { if (e.ch === k.id && t >= e.t) p = Math.max(p, Math.exp(-(t - e.t) * 12)); });
+  if (k.id === 'return' && t >= T.send) p = Math.max(p, Math.exp(-(t - T.send) * 10));
+  return p < 0.01 ? 0 : p;
+};
+
+// ---------- Drawing ----------
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+const font = (w, s) => `${w} ${s}px ${FONT}`;
+
+function rrect(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawGrid(cam) {
+  const s = 40, zs = s * cam.z;
+  const ox = W / 2 - cam.x * cam.z, oy = H / 2 - cam.y * cam.z;
+  const i0 = Math.floor(-ox / zs) - 1, i1 = Math.ceil((W - ox) / zs) + 1;
+  const j0 = Math.floor(-oy / zs) - 1, j1 = Math.ceil((H - oy) / zs) + 1;
+  const r = 1.15 + 0.25 * Math.log2(cam.z + 1);
+  ctx.fillStyle = COL.dot;
+  ctx.beginPath();
+  for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) {
+    const x = ox + i * zs, y = oy + j * zs;
+    ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, Math.PI * 2);
+  }
+  ctx.fill();
+}
+
+function drawToggle(t) {
+  const f = toggleFill(t);
+  rrect(TOG.cx - TOG.w / 2, TOG.cy - TOG.h / 2, TOG.w, TOG.h, TOG.h / 2);
+  ctx.fillStyle = mixHex(COL.track, COL.blue, smooth(f));
+  ctx.fill();
+}
+
+function drawSlider(t) {
+  const kx = knobX(t);
+  // track + fill
+  rrect(SL.x0 - SL.h / 2, SL.y - SL.h / 2, SL.x1 - SL.x0 + SL.h, SL.h, SL.h / 2);
+  ctx.fillStyle = COL.track; ctx.fill();
+  rrect(SL.x0 - SL.h / 2, SL.y - SL.h / 2, kx - SL.x0 + SL.h, SL.h, SL.h / 2);
+  ctx.fillStyle = COL.blue; ctx.fill();
+  // end labels
+  ctx.font = font(500, 18); ctx.fillStyle = COL.text3; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('0', SL.x0, SL.y + 68);
+  ctx.fillText(String(INPUT.target), SL.x1, SL.y + 68);
+  // knob (the ball sits inside it)
+  const dip = 1 - ring(t - T.knobLand, 0.06, 30, 0.5) - ring(t - T.hundred, 0.04, 30, 0.5);
+  ctx.beginPath(); ctx.arc(kx, SL.y, SL.knobR * dip, 0, Math.PI * 2);
+  ctx.fillStyle = COL.ctrl; ctx.fill();
+  ctx.lineWidth = 4; ctx.strokeStyle = COL.blue; ctx.stroke();
+  // value bubble
+  const show = smooth(inv(T.knobLand, T.knobLand + 0.16, t));
+  if (show > 0) {
+    const v = valueAt(kx);
+    const pop = 1 + ring(t - T.hundred, 0.12, 26, 0.55) * (t >= T.hundred ? 1 : 0);
+    const sc = lerp(0.7, 1, spring(t - T.knobLand, 26, 0.7)) * pop;
+    const done = smooth(inv(T.hundred, T.hundred + 0.1, t));
+    const bw = 96, bh = 54, by = SL.y - SL.knobR - 18 - bh / 2;
+    ctx.save();
+    ctx.globalAlpha = show;
+    ctx.translate(kx, by + bh / 2 + 9); ctx.scale(sc, sc); ctx.translate(0, -bh / 2 - 9);
+    ctx.fillStyle = mixHex('#2A2A30', COL.blue, done);
+    rrect(-bw / 2, -bh / 2, bw, bh, 15); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-9, bh / 2 - 1); ctx.lineTo(0, bh / 2 + 9); ctx.lineTo(9, bh / 2 - 1); ctx.closePath(); ctx.fill();
+    ctx.font = font(600, 28); ctx.fillStyle = COL.text; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(v), 0, 1);
+    ctx.restore();
+  }
+}
+
+function drawIcon(kind, x, y) {
+  rrect(x, y, 52, 52, 14); ctx.fillStyle = COL.ctrl2; ctx.fill();
+  ctx.strokeStyle = COL.text; ctx.fillStyle = COL.text; ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const cx = x + 26, cy = y + 26;
+  ctx.beginPath();
+  if (kind === 'slider') {
+    ctx.moveTo(cx - 14, cy); ctx.lineTo(cx + 14, cy); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx + 5, cy, 5.5, 0, Math.PI * 2); ctx.fill();
+  } else if (kind === 'gravity') {
+    ctx.moveTo(cx, cy - 13); ctx.lineTo(cx, cy + 11); ctx.moveTo(cx - 8, cy + 3); ctx.lineTo(cx, cy + 11); ctx.lineTo(cx + 8, cy + 3); ctx.stroke();
+  } else {
+    rrect(cx - 14, cy - 11, 28, 19, 7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - 6, cy + 8); ctx.lineTo(cx - 9, cy + 14); ctx.lineTo(cx + 1, cy + 8); ctx.stroke();
+  }
+}
+
+function drawCards(t) {
+  CARDS.forEach((c, i) => {
+    const { a, dx } = cardIn(c, t);
+    if (a <= 0) return;
+    const dy = ring(t - c.tap, 3, 30, 0.55);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.translate(dx, dy);
+    rrect(CARDX, c.y, CARDW, c.h, 22);
+    ctx.fillStyle = COL.card; ctx.fill();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = COL.line; ctx.stroke();
+    drawIcon(c.icon, CARDX + 24, c.y + 28);
+    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+    ctx.font = font(600, 24); ctx.fillStyle = COL.text; ctx.fillText(c.title, CARDX + 96, c.y + 48);
+    ctx.font = font(400, 22); ctx.fillStyle = COL.text2; ctx.fillText(c.body, CARDX + 96, c.y + 80);
+    ctx.font = font(500, 17); ctx.fillStyle = COL.text3; ctx.textAlign = 'right';
+    ctx.fillText('now', CARDX + CARDW - 24, c.y + 40);
+    ctx.restore();
+  });
+}
+
+function drawComposer(t) {
+  const c3 = CARDS[2];
+  const { a, dx } = cardIn(c3, t);
+  if (a <= 0) return;
+  const m = morphAt(t), k = contractAt(t);
+  // rect: pill -> field -> sent bubble
+  const P = { x: PILL.x + dx, y: PILL.y, w: PILL.w, h: PILL.h, r: 22 };
+  const F = { x: FIELD.x, y: FIELD.y, w: FIELD.w, h: FIELD.h, r: 34 };
+  const B = { x: BUBBLE.x, y: BUBBLE.y, w: BUBBLE.w, h: BUBBLE.h, r: 25 };
+  const L = (p, q, u) => ({ x: lerp(p.x, q.x, u), y: lerp(p.y, q.y, u), w: lerp(p.w, q.w, u), h: lerp(p.h, q.h, u), r: lerp(p.r, q.r, u) });
+  const rc = k > 0 ? L(F, B, k) : L(P, F, m);
+  const pressed = 1 - ring(t - c3.tap, 0.05, 30, 0.6);
+  ctx.save();
+  ctx.globalAlpha = a;
+  // body
+  const fillA = mixHex('#2A2A30', '#18181C', smooth(clamp(m * 1.4)));
+  const fill = k > 0 ? mixHex('#18181C', COL.blue, smooth(clamp(k * 1.6))) : fillA;
+  ctx.save();
+  ctx.translate(rc.x + rc.w / 2, rc.y + rc.h / 2); ctx.scale(pressed, pressed);
+  rrect(-rc.w / 2, -rc.h / 2, rc.w, rc.h, rc.r);
+  ctx.fillStyle = fill; ctx.fill();
+  if (m > 0.05 && k < 0.5) { ctx.lineWidth = 1.5; ctx.strokeStyle = `rgba(255,255,255,${0.09 * (1 - k * 2)})`; ctx.stroke(); }
+  ctx.restore();
+  // label: "Reply" in the pill -> placeholder in the field
+  const typed = typedAt(t);
+  ctx.textBaseline = 'middle';
+  if (!typed) {
+    // slides from the pill centre to the field's placeholder spot
+    ctx.font = font(500, lerp(20, 24, m));
+    const half = ctx.measureText('Reply').width / 2;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = `rgba(245,245,247,${lerp(1, 0.34, smooth(m))})`;
+    ctx.fillText('Reply', lerp(P.x + P.w / 2, F.x + 34 + half, m), lerp(P.y + P.h / 2, F.y + F.h / 2, m) + 1);
+  } else {
+    // typed text, then it rides into the sent bubble
+    ctx.font = font(500, lerp(26, 22, k));
+    const tw = ctx.measureText(typed).width;
+    const tx = lerp(F.x + 28, B.x + (B.w - tw) / 2, k);
+    const ty = lerp(F.y + F.h / 2, B.y + B.h / 2, k) + 1;
+    ctx.textAlign = 'left'; ctx.fillStyle = COL.text;
+    ctx.fillText(typed, tx, ty);
+    // caret
+    if (k === 0) {
+      const last = TYPED.filter(e => t >= e.t).pop().t;
+      if (((t - last) % 1) < 0.5) { ctx.fillStyle = COL.blue; ctx.fillRect(tx + tw + 3, ty - 15, 2.5, 30); }
+    }
+  }
+  if (!typed && m > 0.6) {
+    const last = T.morph + 0.45;
+    if (t > last && ((t - last) % 1) < 0.5) { ctx.fillStyle = COL.blue; ctx.fillRect(F.x + 26, F.y + F.h / 2 - 15, 2.5, 30); }
+  }
+  // send button
+  const sa = smooth(inv(0.55, 0.95, m)) * (1 - smooth(clamp(k * 2.5)));
+  if (sa > 0) {
+    const act = smooth(inv(T.send, T.send + 0.1, t));
+    const sp = 1 - ring(t - T.send, 0.14, 32, 0.55);
+    ctx.save();
+    ctx.globalAlpha = a * sa;
+    ctx.translate(SEND.x, SEND.y); ctx.scale(sp, sp);
+    ctx.beginPath(); ctx.arc(0, 0, SEND.r, 0, Math.PI * 2);
+    ctx.fillStyle = mixHex('#2E2E35', COL.blue, act); ctx.fill();
+    ctx.strokeStyle = typed ? COL.text : 'rgba(245,245,247,0.4)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(0, 10); ctx.lineTo(0, -9); ctx.moveTo(-8, -1); ctx.lineTo(0, -9); ctx.lineTo(8, -1); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawKeyboard(t) {
+  const a = smooth(inv(T.keyboard, T.keyboard + 0.2, t));
+  if (a <= 0) return;
+  const dy = 150 * (1 - spring(t - T.keyboard, 20, 0.8));
+  ctx.save();
+  ctx.globalAlpha = a; ctx.translate(0, dy);
+  rrect(KB.x, KB.y, KB.w, KB.h, 30);
+  ctx.fillStyle = COL.panel; ctx.fill();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = COL.line; ctx.stroke();
+  KEYS.forEach(k => {
+    const p = keyPress(k, t);
+    ctx.save();
+    ctx.translate(0, 2 * p);
+    rrect(k.x, k.y, k.w, k.h, 14);
+    ctx.fillStyle = p ? mixHex(COL.key, COL.keyHi, p) : COL.key; ctx.fill();
+    ctx.fillStyle = COL.text; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.font = k.small ? font(500, 21) : font(500, 29);
+    ctx.fillText(k.label, k.x + k.w / 2, k.small ? k.y + 50 : k.y + 36);
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
+function ballTransform(t) {
+  const s = segAt(t);
+  // squash from impacts (+ anticipation before the launch)
+  let sv = 0, sh = 0;
+  IMPACTS.forEach(im => {
+    const v = ring(t - im.t, im.A);
+    if (im.axis === 'v') sv += v; else sh += v;
+  });
+  if (t > T.launch - 0.09 && t < T.launch) sv += 0.12 * Math.sin(Math.PI * inv(T.launch - 0.09, T.launch, t));
+  // gentle stretch along velocity while airborne
+  let st = 0, ang = 0;
+  if (s.air) {
+    const e = 1 / 240, a = s.f(clamp(t - e, s.t0, s.t1)), b = s.f(clamp(t + e, s.t0, s.t1));
+    const vx = (b[0] - a[0]) / (2 * e), vy = (b[1] - a[1]) / (2 * e);
+    st = Math.min(0.06, Math.hypot(vx, vy) / 24000) * smooth(inv(s.t0, s.t0 + 0.05, t)) * smooth(inv(s.t1, s.t1 - 0.05, t));
+    ang = Math.atan2(vy, vx);
+  }
+  return { sv, sh, st, ang };
+}
+
+function drawBall(t) {
+  const [x, y] = ballPos(t);
+  const { sv, sh, st, ang } = ballTransform(t);
+  ctx.save();
+  ctx.translate(x, y);
+  // stretch along velocity
+  ctx.rotate(ang); ctx.scale(1 + st, 1 - st * 0.7); ctx.rotate(-ang);
+  // squash
+  ctx.scale((1 + sv * 0.9) * (1 - sh), (1 - sv) * (1 + sh * 0.9));
+  ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
+  ctx.fillStyle = COL.ball; ctx.fill();
+  ctx.restore();
+}
+
+function drawCursor(t, cam) {
+  const { p, press } = cursorAt(t);
+  const sx = (p[0] - cam.x) * cam.z + W / 2, sy = (p[1] - cam.y) * cam.z + H / 2;
+  const s = 1.6 * (1 - 0.12 * press);
+  ctx.save();
+  ctx.translate(sx, sy); ctx.scale(s, s);
+  ctx.beginPath();
+  ctx.moveTo(0, 0); ctx.lineTo(0, 22.5); ctx.lineTo(5.4, 17.3); ctx.lineTo(9.2, 26.2);
+  ctx.lineTo(13.1, 24.5); ctx.lineTo(9.4, 15.8); ctx.lineTo(16.6, 15.8); ctx.closePath();
+  ctx.fillStyle = '#FFFFFF'; ctx.fill();
+  ctx.lineWidth = 1.6; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000000'; ctx.stroke();
+  ctx.restore();
+}
+
+function seek(time) {
+  const t = ((time % DUR) + DUR) % DUR;
+  const cam = camera(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+  drawGrid(cam);
+  ctx.setTransform(cam.z, 0, 0, cam.z, W / 2 - cam.x * cam.z, H / 2 - cam.y * cam.z);
+  drawToggle(t);
+  drawSlider(t);
+  drawCards(t);
+  drawComposer(t);
+  drawKeyboard(t);
+  drawBall(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  drawCursor(t, cam);
+  return t;
+}
+
+// ---------- Sound cues (consumed by the audio builder) ----------
+function cues() {
+  const c = [
+    { t: T.cursorDown, kind: 'press' },
+    { t: T.click, kind: 'click' },
+    { t: T.toggleHit, kind: 'thock' },
+    { t: T.knobLand, kind: 'land' },
+  ];
+  for (let v = 10; v <= 90; v += 10) {
+    // invert the slider curve numerically for each 10-step tick
+    let lo = T.slideStart, hi = T.hundred;
+    for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; valueAt(sliderX(m)) >= v ? hi = m : lo = m; }
+    c.push({ t: hi, kind: 'tick' });
+  }
+  c.push({ t: T.hundred, kind: 'hundred' });
+  CARDS.forEach(k => c.push({ t: k.arrive, kind: 'card' }, { t: k.tap, kind: 'tap' }));
+  c.push({ t: T.morph + 0.05, kind: 'stretch' }, { t: T.keyboard, kind: 'rise' });
+  TYPED.forEach(k => c.push({ t: k.t, kind: 'key' }));
+  c.push({ t: T.send, kind: 'return' }, { t: T.send + 0.04, kind: 'send' });
+  c.push({ t: T.home, kind: 'land' }, { t: T.homeSlide + 0.12, kind: 'click' });
+  return c.sort((a, b) => a.t - b.t);
+}
+
+window.FILM = { W, H, DUR, FPS, BPM, BEAT, seek, cues, ballPos, camera, INPUT };
+window.seek = seek;
+
+// ---------- Playback (preview only; render mode drives seek directly) ----------
+const params = new URLSearchParams(location.search);
+const ready = document.fonts.load(font(600, 24)).then(() => document.fonts.load(font(400, 22))).then(() => document.fonts.ready);
+window.FILM.ready = ready;
+if (params.has('render')) {
+  document.body.classList.add('render');
+  ready.then(() => seek(Number(params.get('t') || 0)));
+} else {
+  let start = null, paused = false, pausedAt = 0;
+  const loop = now => {
+    if (start === null) start = now;
+    if (!paused) seek((now - start) / 1000);
+    requestAnimationFrame(loop);
+  };
+  addEventListener('keydown', e => {
+    if (e.code !== 'Space') return;
+    paused = !paused;
+    const now = performance.now();
+    if (paused) pausedAt = now; else start += now - pausedAt;
+  });
+  ready.then(() => requestAnimationFrame(loop));
+}
+})();
+</script>
+</body>
+</html>
